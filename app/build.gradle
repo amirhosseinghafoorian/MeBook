@@ -25,9 +25,30 @@ android {
         }
     }
 
+    flavorDimensions "dev"
+    productFlavors {
+        mock {
+            dimension "dev"
+            applicationIdSuffix ".mock"
+        }
+        live {
+            dimension "dev"
+            applicationIdSuffix ".live"
+        }
+    }
+
+    variantFilter { variant ->
+        def name_types = variant.flavors*.name
+        def name = name_types.join()
+
+        if (variant.buildType.name == "release" && name.contains("mock")){
+            setIgnore(true)
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
