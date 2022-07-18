@@ -1,4 +1,4 @@
-package com.example.mebook.feature.presentation.splash
+package com.example.mebook.feature.presentation.authenticate
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

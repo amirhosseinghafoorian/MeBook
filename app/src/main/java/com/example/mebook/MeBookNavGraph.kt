@@ -11,7 +11,7 @@ import com.example.mebook.MeBookScreens.LOGIN_ROUTE
 import com.example.mebook.MeBookScreens.SIGN_UP_ROUTE
 import com.example.mebook.feature.presentation.login.LoginScreen
 import com.example.mebook.feature.presentation.sign_up.SignUpScreen
-import com.example.mebook.feature.presentation.splash.AuthenticateScreen
+import com.example.mebook.feature.presentation.authenticate.AuthenticateScreen
 
 @Composable
 fun MeBookNavGraph(
