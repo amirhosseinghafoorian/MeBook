@@ -8,14 +8,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mebook.ui.theme.MeBookTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-//            passing this to MeBookApp may help with additional configuration for large screens
+//            passing this to MeBookScreen may help with additional configuration for large screens
 //            val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            MeBookApp()
+            MeBookScreen()
         }
     }
 }
