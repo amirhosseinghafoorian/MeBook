@@ -23,7 +23,7 @@ import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.C
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.Navigate
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.NavigateUp
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.SnackBar
-import com.example.mebook.ui.components.MeBookSnackBarObserver
+import com.example.mebook.ui.components.MeBookSnackbarObserver
 import com.example.mebook.ui.components.MeBookSnackbarHost
 
 @Composable
@@ -43,7 +43,7 @@ fun AuthenticateScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
 
-    MeBookSnackBarObserver(
+    MeBookSnackbarObserver(
         scaffoldState = scaffoldState,
         snackbarFlow = viewModel.snackbarFlow
     )

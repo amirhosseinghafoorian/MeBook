@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
-fun MeBookSnackBarObserver(
+fun MeBookSnackbarObserver(
     scaffoldState: ScaffoldState,
     snackbarFlow: SharedFlow<String>,
     coroutineScope: CoroutineScope = rememberCoroutineScope()
