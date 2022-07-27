@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,6 +25,7 @@ import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.C
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.Navigate
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.NavigateUp
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.SnackBar
+import com.example.mebook.ui.components.MeBookSnackbarHost
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -44,23 +47,25 @@ fun AuthenticateScreen(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
-    SideEffect {
+    LaunchedEffect(scaffoldState) {
         scope.launch {
             viewModel.snackBarState.collectLatest { message ->
                 scaffoldState.snackbarHostState.showSnackbar(message)
+                println("this shit here")
             }
         }
     }
 
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(scaffoldState = scaffoldState) {
-        AuthenticateScreen(uiState) { action ->
-            when (action) {
-                NavigateUp -> navController.navigateUp()
-                is Navigate -> navController.navigate(action.route)
-                else -> viewModel.submitAction(action)
-            }
+    AuthenticateScreen(
+        scaffoldState = scaffoldState,
+        uiState = uiState
+    ) { action ->
+        when (action) {
+            NavigateUp -> navController.navigateUp()
+            is Navigate -> navController.navigate(action.route)
+            else -> viewModel.submitAction(action)
         }
     }
 
@@ -68,30 +73,38 @@ fun AuthenticateScreen(
 
 @Composable
 fun AuthenticateScreen(
+    scaffoldState: ScaffoldState,
     uiState: AuthenticateUiState,
     action: (AuthenticateAction) -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(uiState.name)
+    Scaffold(
+        scaffoldState = scaffoldState,
+        snackbarHost = { MeBookSnackbarHost(hostState = it) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(uiState.name)
 
-        Spacer(modifier = Modifier.height(64.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
-        Button(onClick = {
-            action(SnackBar("hello"))
-        }) {
-            Text("Sign Up")
-        }
+            Button(onClick = {
+                action(SnackBar("hello"))
+            }) {
+                Text("Sign Up")
+            }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = {
-            action(ChangeName("name changed"))
-        }) {
-            Text("Login")
+            Button(onClick = {
+                action(ChangeName("name changed"))
+            }) {
+                Text("Login")
+            }
         }
     }
 }
