@@ -23,8 +23,8 @@ import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.C
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.Navigate
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.NavigateUp
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.SnackBar
-import com.example.mebook.ui.components.MeBookSnackbarObserver
 import com.example.mebook.ui.components.MeBookSnackbarHost
+import com.example.mebook.ui.components.MeBookSnackbarObserver
 
 @Composable
 fun AuthenticateScreen(
