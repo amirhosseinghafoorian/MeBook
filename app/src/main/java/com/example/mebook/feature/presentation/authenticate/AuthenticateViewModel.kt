@@ -19,5 +19,6 @@ class AuthenticateViewModel @Inject constructor() : BaseViewModel<Test, Test>(Te
 // todo rotation should be tested
 // todo snackBar should be tested
 // todo UiState should be tested
+// todo add application to manifest
 
 }
