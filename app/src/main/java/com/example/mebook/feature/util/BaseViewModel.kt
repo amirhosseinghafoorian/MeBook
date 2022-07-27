@@ -28,7 +28,7 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
 
     protected abstract fun onAction(action: A)
 
-    protected fun sendSnackbar(value: String) {
+    protected fun showSnackbar(value: String) {
         viewModelScope.launch {
             _snackbarFlow.emit(value)
         }

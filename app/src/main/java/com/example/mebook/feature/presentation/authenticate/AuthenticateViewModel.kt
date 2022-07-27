@@ -5,7 +5,6 @@ import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.S
 import com.example.mebook.feature.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 
@@ -15,7 +14,7 @@ class AuthenticateViewModel @Inject constructor() :
 
     override fun onAction(action: AuthenticateAction) {
         when (action) {
-            is SnackBar -> sendSnackbar(action.message)
+            is SnackBar -> showSnackbar(action.message)
             is ChangeName -> {
                 state.update {
                     it.copy(name = action.name)
