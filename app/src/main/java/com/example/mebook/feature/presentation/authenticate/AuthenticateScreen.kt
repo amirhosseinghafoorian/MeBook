@@ -51,7 +51,6 @@ fun AuthenticateScreen(
         scope.launch {
             viewModel.snackBarState.collectLatest { message ->
                 scaffoldState.snackbarHostState.showSnackbar(message)
-                println("this shit here")
             }
         }
     }
