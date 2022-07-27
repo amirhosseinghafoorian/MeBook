@@ -12,10 +12,8 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,9 +23,8 @@ import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.C
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.Navigate
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.NavigateUp
 import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.SnackBar
+import com.example.mebook.ui.components.MeBookSnackBarObserver
 import com.example.mebook.ui.components.MeBookSnackbarHost
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
 fun AuthenticateScreen(
@@ -44,16 +41,12 @@ fun AuthenticateScreen(
     navController: NavController,
     viewModel: AuthenticateViewModel
 ) {
-    val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
-    LaunchedEffect(scaffoldState) {
-        scope.launch {
-            viewModel.snackBarState.collectLatest { message ->
-                scaffoldState.snackbarHostState.showSnackbar(message)
-            }
-        }
-    }
+    MeBookSnackBarObserver(
+        scaffoldState = scaffoldState,
+        snackbarFlow = viewModel.snackbarFlow
+    )
 
     val uiState by viewModel.uiState.collectAsState()
 

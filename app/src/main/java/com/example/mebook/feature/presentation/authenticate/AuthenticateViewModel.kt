@@ -15,7 +15,7 @@ class AuthenticateViewModel @Inject constructor() :
 
     override fun onAction(action: AuthenticateAction) {
         when (action) {
-            is SnackBar -> sendSnackBar(action.message)
+            is SnackBar -> sendSnackbar(action.message)
             is ChangeName -> {
                 state.update {
                     it.copy(name = action.name)

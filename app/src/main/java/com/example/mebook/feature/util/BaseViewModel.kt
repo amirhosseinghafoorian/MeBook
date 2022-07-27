@@ -11,10 +11,10 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
 
-    protected val state = MutableStateFlow(initialState)
-    private val snackBarFlow = MutableSharedFlow<String>()
+    private val _snackbarFlow = MutableSharedFlow<String>()
+    val snackbarFlow = _snackbarFlow.asSharedFlow()
 
-    val snackBarState = snackBarFlow.asSharedFlow()
+    protected val state = MutableStateFlow(initialState)
     val uiState = state
         .stateIn(
             viewModelScope,
@@ -26,12 +26,11 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
         onAction(action)
     }
 
-    //
     protected abstract fun onAction(action: A)
 
-    protected fun sendSnackBar(value: String) {
+    protected fun sendSnackbar(value: String) {
         viewModelScope.launch {
-            snackBarFlow.emit(value)
+            _snackbarFlow.emit(value)
         }
     }
 
