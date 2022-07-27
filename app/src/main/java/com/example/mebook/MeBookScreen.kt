@@ -1,6 +1,5 @@
 package com.example.mebook
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -13,7 +12,7 @@ fun MeBookScreen() {
     MeBookTheme {
         val systemUiController = rememberSystemUiController()
         SideEffect {
-            systemUiController.setSystemBarsColor(Color.Transparent , true)
+            systemUiController.setSystemBarsColor(Color.Transparent, true)
         }
 
         val navController = rememberNavController()
