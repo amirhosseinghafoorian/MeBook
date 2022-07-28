@@ -2,7 +2,6 @@ package com.example.mebook.di
 
 import com.example.mebook.BuildConfig
 import com.example.mebook.data.remote.MyTestApi
-import com.example.mebook.model.MyTestModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

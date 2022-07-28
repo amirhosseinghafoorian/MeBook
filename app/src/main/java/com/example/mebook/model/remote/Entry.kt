@@ -1,4 +1,4 @@
-package com.example.mebook.model
+package com.example.mebook.model.remote
 
 data class Entry(
     val API: String,

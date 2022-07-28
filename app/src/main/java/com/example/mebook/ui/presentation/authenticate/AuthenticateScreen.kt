@@ -19,12 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.ChangeName
-import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.Navigate
-import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.NavigateUp
-import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.SnackBar
 import com.example.mebook.ui.components.MeBookSnackbarHost
 import com.example.mebook.ui.components.MeBookSnackbarObserver
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallApi
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallDatabase
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.Navigate
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.NavigateUp
 
 @Composable
 fun AuthenticateScreen(
@@ -85,17 +85,17 @@ fun AuthenticateScreen(
             Spacer(modifier = Modifier.height(64.dp))
 
             Button(onClick = {
-                action(SnackBar("hello"))
+                action(CallApi)
             }) {
-                Text("Sign Up")
+                Text("Make Api Call")
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(onClick = {
-                action(ChangeName("name changed"))
+                action(CallDatabase)
             }) {
-                Text("Login")
+                Text("Make Database Call")
             }
         }
     }
