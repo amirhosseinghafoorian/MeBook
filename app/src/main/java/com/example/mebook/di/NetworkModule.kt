@@ -37,7 +37,7 @@ object NetworkModule {
     ): Retrofit = Retrofit
         .Builder()
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("https://api.publicapis.org/")
+        .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
         .build()
 
