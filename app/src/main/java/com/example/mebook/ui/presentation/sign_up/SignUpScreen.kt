@@ -1,4 +1,4 @@
-package com.example.mebook.feature.presentation.sign_up
+package com.example.mebook.ui.presentation.sign_up
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.mebook.MeBookScreens.LOGIN_ROUTE
-import com.example.mebook.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
+import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
 
 @Composable
 fun SignUpScreen(

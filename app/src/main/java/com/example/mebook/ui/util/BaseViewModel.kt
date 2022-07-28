@@ -1,4 +1,4 @@
-package com.example.mebook.feature.util
+package com.example.mebook.ui.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

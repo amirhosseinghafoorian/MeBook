@@ -1,8 +1,8 @@
-package com.example.mebook.feature.presentation.authenticate
+package com.example.mebook.ui.presentation.authenticate
 
-import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.ChangeName
-import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.SnackBar
-import com.example.mebook.feature.util.BaseViewModel
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.ChangeName
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.SnackBar
+import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject

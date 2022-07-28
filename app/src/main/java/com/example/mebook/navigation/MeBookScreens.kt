@@ -1,4 +1,4 @@
-package com.example.mebook
+package com.example.mebook.navigation
 
 object MeBookScreens {
     const val AUTHENTICATE_ROUTE = "authenticate"

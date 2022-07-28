@@ -1,4 +1,4 @@
-package com.example.mebook.feature.presentation.authenticate
+package com.example.mebook.ui.presentation.authenticate
 
 sealed interface AuthenticateAction {
     data class SnackBar(val message: String) : AuthenticateAction

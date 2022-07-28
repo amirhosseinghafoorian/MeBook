@@ -1,4 +1,4 @@
-package com.example.mebook.feature.presentation.authenticate
+package com.example.mebook.ui.presentation.authenticate
 
 data class AuthenticateUiState(
     val name : String = "Authenticate SC"

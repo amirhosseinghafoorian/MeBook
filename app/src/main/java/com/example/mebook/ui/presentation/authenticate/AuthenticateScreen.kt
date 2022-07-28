@@ -1,4 +1,4 @@
-package com.example.mebook.feature.presentation.authenticate
+package com.example.mebook.ui.presentation.authenticate
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.ChangeName
-import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.Navigate
-import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.NavigateUp
-import com.example.mebook.feature.presentation.authenticate.AuthenticateAction.SnackBar
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.ChangeName
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.Navigate
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.NavigateUp
+import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.SnackBar
 import com.example.mebook.ui.components.MeBookSnackbarHost
 import com.example.mebook.ui.components.MeBookSnackbarObserver
 
