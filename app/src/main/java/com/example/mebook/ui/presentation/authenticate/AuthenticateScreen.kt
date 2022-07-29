@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -25,6 +26,8 @@ import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallAp
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallDatabase
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.Navigate
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.NavigateUp
+import com.example.mebook.ui.util.doOnFalse
+import com.example.mebook.ui.util.doOnTrue
 
 @Composable
 fun AuthenticateScreen(
@@ -51,6 +54,7 @@ fun AuthenticateScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     AuthenticateScreen(
+        isLoading = viewModel.isLoading,
         scaffoldState = scaffoldState,
         uiState = uiState
     ) { action ->
@@ -65,6 +69,7 @@ fun AuthenticateScreen(
 
 @Composable
 fun AuthenticateScreen(
+    isLoading: Boolean,
     scaffoldState: ScaffoldState,
     uiState: AuthenticateUiState,
     action: (AuthenticateAction) -> Unit
@@ -84,19 +89,23 @@ fun AuthenticateScreen(
 
             Spacer(modifier = Modifier.height(64.dp))
 
-            Button(onClick = {
-                action(CallApi)
-            }) {
-                Text("Make Api Call")
-            }
+            isLoading
+                .doOnTrue { CircularProgressIndicator() }
+                .doOnFalse {
+                    Button(onClick = {
+                        action(CallApi)
+                    }) {
+                        Text("Make Api Call")
+                    }
 
-            Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = {
-                action(CallDatabase)
-            }) {
-                Text("Make Database Call")
-            }
+                    Button(onClick = {
+                        action(CallDatabase)
+                    }) {
+                        Text("Make Database Call")
+                    }
+                }
         }
     }
 }

@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class AuthenticateViewModel @Inject constructor(
     private val repo: TestRepository
@@ -31,10 +30,16 @@ class AuthenticateViewModel @Inject constructor(
     }
 
     private fun testApiCall() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = repo.getTestData()
-            showSnackbar(result.count.toString())
-        }
+        makeSuspendCall(
+            block = {
+                repo.getTestData()
+            },
+            onSuccess = { result ->
+                state.update {
+                    it.copy(name = "api result : ${result.count}")
+                }
+            }
+        )
     }
 
     private fun addUser() {
