@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -25,10 +27,35 @@ android {
         }
     }
 
+    flavorDimensions "dev"
+    productFlavors {
+        mock {
+            dimension "dev"
+            applicationIdSuffix ".mock"
+        }
+        live {
+            dimension "dev"
+            applicationIdSuffix ".live"
+        }
+    }
+
+    variantFilter { variant ->
+        def name_types = variant.flavors*.name
+        def name = name_types.join()
+
+        if (variant.buildType.name == "release" && name.contains("mock")){
+            setIgnore(true)
+        }
+    }
+
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.5:5000/\"")
+        }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "BASE_URL", "\"http://45.139.10.139/\"")
         }
     }
     compileOptions {
@@ -69,4 +96,28 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    // navigation
+    implementation "androidx.navigation:navigation-compose:2.5.0"
+
+    // accompanist
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.11-rc"
+
+    // view model
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+
+    // hilt
+    implementation "com.google.dagger:hilt-android:2.43"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+    kapt "com.google.dagger:hilt-android-compiler:2.43"
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3"
+
+    // Room
+    implementation "androidx.room:room-runtime:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
 }
