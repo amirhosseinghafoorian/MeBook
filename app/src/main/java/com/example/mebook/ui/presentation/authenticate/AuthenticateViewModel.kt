@@ -36,7 +36,7 @@ class AuthenticateViewModel @Inject constructor(
             },
             onSuccess = { result ->
                 state.update {
-                    it.copy(name = "api result : ${result.count}")
+                    it.copy(name = "name from api : ${result.name}")
                 }
             }
         )

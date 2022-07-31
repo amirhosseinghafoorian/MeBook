@@ -4,7 +4,7 @@ import com.example.mebook.data.database.TestDao
 import com.example.mebook.data.remote.MyTestApi
 import com.example.mebook.domain.TestRepository
 import com.example.mebook.model.database.User
-import com.example.mebook.model.remote.MyTestModel
+import com.example.mebook.model.remote.ServerTestModel
 import javax.inject.Inject
 
 class TestRepositoryImpl @Inject constructor(
@@ -24,7 +24,7 @@ class TestRepositoryImpl @Inject constructor(
         return dao.getAllUsers()
     }
 
-    override suspend fun getTestData(): MyTestModel {
+    override suspend fun getTestData(): ServerTestModel {
         return api.getMyApiData()
     }
 
