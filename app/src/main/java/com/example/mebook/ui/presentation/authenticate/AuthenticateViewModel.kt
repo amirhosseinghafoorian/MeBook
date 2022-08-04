@@ -43,24 +43,22 @@ class AuthenticateViewModel @Inject constructor(
     }
 
     private fun addUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repo.addUser(User(1, "ali"))
-        }
+        makeSuspendCall(
+            block = { repo.fetchUser() }
+        )
     }
 
     private fun getUsers() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repo.getAllUsers()
-            if (result.any {
-                    it.name == "ali"
-                }
-            ) {
-                state.update {
-                    it.copy(name = "user found")
-                }
-            } else {
-                state.update {
-                    it.copy(name = "no users available")
+            repo.getAllUsers().collect { result ->
+                if (result.isNotEmpty()) {
+                    state.update {
+                        it.copy(name = "user : ${result[0].name}")
+                    }
+                } else {
+                    state.update {
+                        it.copy(name = "no users available")
+                    }
                 }
             }
         }

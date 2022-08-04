@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mebook.model.database.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TestDao {
@@ -14,7 +15,7 @@ interface TestDao {
     fun insertUser(user: User)
 
     @Query("SELECT * FROM users")
-    fun getAllUsers(): List<User>
+    fun getAllUsers(): Flow<List<User>>
 
     @Delete
     fun removeUser(user: User)
