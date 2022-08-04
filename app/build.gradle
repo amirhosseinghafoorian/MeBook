@@ -8,6 +8,18 @@ plugins {
 android {
     compileSdk 32
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+    signingConfigs {
+        release {
+            storeFile file(properties.getProperty("keyPath"))
+            storePassword properties.getProperty("keyPassword")
+            keyAlias properties.getProperty("keyAlias")
+            keyPassword properties.getProperty("keyAliasPassword")
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.mebook"
         minSdk 21
@@ -19,6 +31,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        signingConfig signingConfigs.release
     }
 
     testOptions {
@@ -53,7 +66,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"http://192.168.1.5:5000/\"")
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BASE_URL", "\"http://45.139.10.139/\"")
         }
