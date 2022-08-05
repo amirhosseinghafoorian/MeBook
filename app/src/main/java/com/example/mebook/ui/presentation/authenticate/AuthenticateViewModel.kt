@@ -7,7 +7,6 @@ import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallDa
 import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,14 +33,10 @@ class AuthenticateViewModel @Inject constructor(
                 repo.getTestData()
             },
             onSuccess = { result ->
-                state.update {
-                    it.copy(name = "name from api : ${result.name}")
-                }
+                updateState { copy(name = "name from api : ${result.name}") }
             },
             onLoading = { isLoading ->
-                state.update {
-                    it.copy(isLoading = isLoading)
-                }
+                updateState { copy(isLoading = isLoading) }
             }
         )
     }
@@ -56,13 +51,9 @@ class AuthenticateViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repo.getAllUsers().collect { result ->
                 if (result.isNotEmpty()) {
-                    state.update {
-                        it.copy(name = "user : ${result[0].name}")
-                    }
+                    updateState { copy(name = "user : ${result[0].name}") }
                 } else {
-                    state.update {
-                        it.copy(name = "no users available")
-                    }
+                    updateState { copy(name = "no users available") }
                 }
             }
         }

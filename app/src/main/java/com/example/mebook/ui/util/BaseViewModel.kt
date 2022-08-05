@@ -19,7 +19,7 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
     private val _snackbarFlow = MutableSharedFlow<String>()
     val snackbarFlow = _snackbarFlow.asSharedFlow()
 
-    protected val state = MutableStateFlow(initialState)
+    private val state = MutableStateFlow(initialState)
     val uiState = state
         .stateIn(
             viewModelScope,
@@ -77,6 +77,20 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
                     e.printStackTrace()
                 } finally {
                     onLoading?.invoke(false)
+                }
+            }
+        }
+    }
+
+    protected fun updateState(function: S.(S) -> S) {
+        state.apply {
+            value.apply {
+                while (true) {
+                    val prevValue = this
+                    val nextValue = function(prevValue)
+                    if (compareAndSet(prevValue, nextValue)) {
+                        return
+                    }
                 }
             }
         }
