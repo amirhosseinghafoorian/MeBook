@@ -1,5 +1,6 @@
 package com.example.mebook.navigation
 
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -28,11 +29,12 @@ import com.example.mebook.ui.presentation.write.WriteScreen
 @Composable
 fun MeBookNavGraph(
     modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
-        startDestination = AUTHENTICATE_ROUTE,
+        startDestination = SPLASH_ROUTE,
         modifier = modifier
     ) {
         composable(route = SPLASH_ROUTE) {
@@ -48,13 +50,13 @@ fun MeBookNavGraph(
             SignUpScreen(navController)
         }
         composable(route = HOME_ROUTE) {
-            HomeScreen(navController)
+            HomeScreen(navController, scaffoldState)
         }
         composable(route = PROFILE_ROUTE) {
             ProfileScreen(navController)
         }
         composable(route = SEARCH_ROUTE) {
-            SearchScreen(navController)
+            SearchScreen(navController, scaffoldState)
         }
         composable(route = WRITE_ROUTE) {
             WriteScreen(navController)

@@ -1,9 +1,9 @@
 package com.example.mebook
 
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.example.mebook.navigation.MeBookNavGraph
 import com.example.mebook.ui.theme.MeBookTheme
@@ -20,7 +20,11 @@ fun MeBookScreen() {
             systemUiController.setSystemBarsColor(backgroundColor, isLight)
         }
 
+        val scaffoldState = rememberScaffoldState()
         val navController = rememberNavController()
-        MeBookNavGraph(navController = navController)
+        MeBookNavGraph(
+            navController = navController,
+            scaffoldState = scaffoldState
+        )
     }
 }
