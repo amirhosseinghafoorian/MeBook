@@ -65,7 +65,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"http://192.168.1.5:5000/\"")
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BASE_URL", "\"http://45.139.10.139/\"")
