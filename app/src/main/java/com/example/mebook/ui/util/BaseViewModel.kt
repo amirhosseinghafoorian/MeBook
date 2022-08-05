@@ -1,8 +1,5 @@
 package com.example.mebook.ui.util
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.ui.util.Constants.INTERNET_ERROR
@@ -18,9 +15,6 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 
 abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
-
-    var isLoading by mutableStateOf(false)
-        private set
 
     private val _snackbarFlow = MutableSharedFlow<String>()
     val snackbarFlow = _snackbarFlow.asSharedFlow()
@@ -63,11 +57,12 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
         block: suspend () -> R,
         onSuccess: ((R) -> Unit)? = null,
         onError: ((Exception) -> Unit)? = null,
+        onLoading: ((Boolean) -> Unit)? = null,
         showSnackbarOnError: Boolean = true
     ) {
         viewModelScope.launch {
 
-            isLoading = true
+            onLoading?.invoke(true)
             makeSuspendCall(block).apply {
                 try {
                     val result = getOrThrow()
@@ -81,7 +76,7 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
                     onError?.invoke(e)
                     e.printStackTrace()
                 } finally {
-                    isLoading = false
+                    onLoading?.invoke(false)
                 }
             }
         }

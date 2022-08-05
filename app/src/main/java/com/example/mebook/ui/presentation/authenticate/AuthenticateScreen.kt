@@ -54,7 +54,7 @@ fun AuthenticateScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     AuthenticateScreen(
-        isLoading = viewModel.isLoading,
+        isLoading = uiState.isLoading,
         scaffoldState = scaffoldState,
         uiState = uiState
     ) { action ->

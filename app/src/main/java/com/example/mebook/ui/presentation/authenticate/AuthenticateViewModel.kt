@@ -2,7 +2,6 @@ package com.example.mebook.ui.presentation.authenticate
 
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.TestRepository
-import com.example.mebook.model.database.User
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallApi
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallDatabase
 import com.example.mebook.ui.util.BaseViewModel
@@ -37,6 +36,11 @@ class AuthenticateViewModel @Inject constructor(
             onSuccess = { result ->
                 state.update {
                     it.copy(name = "name from api : ${result.name}")
+                }
+            },
+            onLoading = { isLoading ->
+                state.update {
+                    it.copy(isLoading = isLoading)
                 }
             }
         )
