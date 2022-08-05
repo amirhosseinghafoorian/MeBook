@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -82,17 +83,9 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
         }
     }
 
-    protected fun updateState(function: S.(S) -> S) {
+    protected fun updateState(newState: S.(S) -> S) {
         state.apply {
-            value.apply {
-                while (true) {
-                    val prevValue = this
-                    val nextValue = function(prevValue)
-                    if (compareAndSet(prevValue, nextValue)) {
-                        return
-                    }
-                }
-            }
+            update { value.newState(it) }
         }
     }
 
