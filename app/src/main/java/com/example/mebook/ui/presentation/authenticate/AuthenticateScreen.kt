@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
@@ -21,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallApi
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallDatabase
@@ -66,33 +69,32 @@ fun AuthenticateScreen(
     action: (AuthenticateAction) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.weight(1f))
+
         Text(uiState.name)
 
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         uiState.isLoading
             .doOnTrue { CircularProgressIndicator() }
             .doOnFalse {
 
-                Button(
+                MeBookButton(
+                    modifier = Modifier.fillMaxWidth(),
                     onClick = { action(Navigate(SIGN_UP_ROUTE)) }
                 ) {
                     Text("sign up")
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colors.surface,
-                        backgroundColor = MaterialTheme.colors.secondary,
-                        disabledBackgroundColor = MaterialTheme.colors.secondary
-                            .copy(alpha = ContentAlpha.disabled)
-                    ),
+                MeBookButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    backgroundColor = MaterialTheme.colors.secondary,
                     onClick = { action(Navigate(LOGIN_ROUTE)) }
                 ) {
                     Text("login")

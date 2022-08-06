@@ -4,23 +4,26 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.components.MeBookTextField
 import com.example.mebook.ui.components.text_field_util.BasicTextFieldState
 import com.example.mebook.ui.components.text_field_util.PasswordTextFieldState
 import com.example.mebook.ui.components.text_field_util.UsernameTextFieldState
@@ -47,50 +50,42 @@ fun SignUpScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
-                value = usernameState.text,
+            MeBookTextField(
+                state = usernameState,
                 onValueChange = {
                     usernameState.onChanged(it)
                 },
-                placeholder = {
-                    Text("Username")
-                },
-                isError = usernameState.isError()
+                placeholder = "Username"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
-                value = passwordState.text,
+            MeBookTextField(
+                state = passwordState,
                 onValueChange = {
                     passwordState.onChanged(it)
                 },
-                placeholder = {
-                    Text("Password")
-                },
+                placeholder = "Password",
                 keyboardOptions = KeyboardOptions.Default
-                    .copy(keyboardType = KeyboardType.Password),
-                isError = passwordState.isError()
+                    .copy(keyboardType = KeyboardType.Password)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
-                value = confirmPasswordState.text,
+            MeBookTextField(
+                state = confirmPasswordState,
                 onValueChange = {
                     confirmPasswordState.onChanged(it)
                 },
-                placeholder = {
-                    Text("confirm password")
-                },
+                placeholder = "confirm password",
                 keyboardOptions = KeyboardOptions.Default
-                    .copy(keyboardType = KeyboardType.Password),
-                isError = confirmPasswordState.isError()
+                    .copy(keyboardType = KeyboardType.Password)
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Button(
+            MeBookButton(
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     if (
                         usernameState.validate() &&
@@ -114,6 +109,7 @@ fun SignUpScreen(
             Text(
                 text = "already have an account?",
                 modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         navController.navigate(LOGIN_ROUTE) {
                             popUpTo(SIGN_UP_ROUTE) {
@@ -121,7 +117,7 @@ fun SignUpScreen(
                             }
                         }
                     }
-                    .padding(8.dp)
+                    .padding(16.dp)
             )
         }
 
