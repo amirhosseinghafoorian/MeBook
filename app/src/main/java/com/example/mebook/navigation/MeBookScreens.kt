@@ -10,4 +10,7 @@ object MeBookScreens {
     const val SEARCH_ROUTE = "search"
     const val WRITE_ROUTE = "write"
     const val ARTICLE_ROUTE = "article"
+
+    const val AUTH_NAV_ROUTE = "auth_nav"
+    const val HOME_NAV_ROUTE = "home_nav"
 }

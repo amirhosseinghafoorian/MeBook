@@ -20,11 +20,6 @@ fun MeBookScreen() {
             systemUiController.setSystemBarsColor(backgroundColor, isLight)
         }
 
-        val scaffoldState = rememberScaffoldState()
-        val navController = rememberNavController()
-        MeBookNavGraph(
-            navController = navController,
-            scaffoldState = scaffoldState
-        )
+        MeBookNavGraph()
     }
 }
