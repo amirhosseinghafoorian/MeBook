@@ -1,10 +1,11 @@
 package com.example.mebook.ui.components.text_field_util
 
-class BasicTextFieldState : TextFieldState(
-    validator = ::isTextValid
-)
+class BasicTextFieldState : TextFieldState() {
 
-private fun isTextValid(text: String): String? {
-    return if (text.isEmpty()) "username cannot be empty"
-    else null
+    override fun validate(): Boolean {
+        errorMessage = if (text.isEmpty()) "username cannot be empty"
+        else null
+        return isValid()
+    }
+
 }
