@@ -50,7 +50,7 @@ fun SignUpScreen(
             TextField(
                 value = usernameState.text,
                 onValueChange = {
-                    usernameState.text = it
+                    usernameState.onChanged(it)
                 },
                 placeholder = {
                     Text("Username")
@@ -63,7 +63,7 @@ fun SignUpScreen(
             TextField(
                 value = passwordState.text,
                 onValueChange = {
-                    passwordState.text = it
+                    passwordState.onChanged(it)
                 },
                 placeholder = {
                     Text("Password")
@@ -78,7 +78,7 @@ fun SignUpScreen(
             TextField(
                 value = confirmPasswordState.text,
                 onValueChange = {
-                    confirmPasswordState.text = it
+                    confirmPasswordState.onChanged(it)
                 },
                 placeholder = {
                     Text("confirm password")

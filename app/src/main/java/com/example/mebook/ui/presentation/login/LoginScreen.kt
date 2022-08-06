@@ -49,7 +49,7 @@ fun LoginScreen(
             TextField(
                 value = usernameState.text,
                 onValueChange = {
-                    usernameState.text = it
+                    usernameState.onChanged(it)
                 },
                 placeholder = {
                     Text("Username")
@@ -62,7 +62,7 @@ fun LoginScreen(
             TextField(
                 value = passwordState.text,
                 onValueChange = {
-                    passwordState.text = it
+                    passwordState.onChanged(it)
                 },
                 placeholder = {
                     Text("Password")
