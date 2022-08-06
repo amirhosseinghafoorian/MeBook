@@ -77,23 +77,6 @@ fun AuthenticateScreen(
         uiState.isLoading
             .doOnTrue { CircularProgressIndicator() }
             .doOnFalse {
-                Button(
-                    enabled = false,
-                    onClick = { action(CallApi) }
-                ) {
-                    Text("Make Api Call")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    enabled = false,
-                    onClick = { action(CallDatabase) }
-                ) {
-                    Text("Make Database Call")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = { action(Navigate(SIGN_UP_ROUTE)) }
