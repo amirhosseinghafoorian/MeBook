@@ -2,6 +2,6 @@ package com.example.mebook.domain
 
 interface DataStoreRepository {
 
-
+    suspend fun isLoggedIn(): Boolean
 
 }

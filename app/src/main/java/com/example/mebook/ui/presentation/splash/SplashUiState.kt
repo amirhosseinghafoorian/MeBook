@@ -1,3 +1,5 @@
 package com.example.mebook.ui.presentation.splash
 
-class SplashUiState
+data class SplashUiState(
+    val isLoggedIn: Boolean? = null
+)
