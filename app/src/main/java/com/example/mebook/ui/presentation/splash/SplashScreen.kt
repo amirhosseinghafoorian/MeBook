@@ -1,20 +1,31 @@
 package com.example.mebook.ui.presentation.splash
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.navigation.MeBookScreens.AUTHENTICATE_ROUTE
 import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SPLASH_ROUTE
-import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
 
 @Composable
@@ -33,38 +44,50 @@ fun SplashScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    SplashScreen {
-        if (uiState.isLoggedIn == true) {
-            navController.navigate(HOME_NAV_ROUTE) {
-                popUpTo(SPLASH_ROUTE) {
-                    inclusive = true
+    val animationState = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+
+    LaunchedEffect(animationState.isIdle) {
+        if (animationState.isIdle) {
+            if (uiState.isLoggedIn == true) {
+                navController.navigate(HOME_NAV_ROUTE) {
+                    popUpTo(SPLASH_ROUTE) {
+                        inclusive = true
+                    }
                 }
-            }
-        } else if (uiState.isLoggedIn == false) {
-            navController.navigate(AUTHENTICATE_ROUTE) {
-                popUpTo(SPLASH_ROUTE) {
-                    inclusive = true
+            } else if (uiState.isLoggedIn == false) {
+                navController.navigate(AUTHENTICATE_ROUTE) {
+                    popUpTo(SPLASH_ROUTE) {
+                        inclusive = true
+                    }
                 }
             }
         }
     }
-}
 
-@Composable
-fun SplashScreen(
-    loggedInResult: () -> Unit
-) {
     MeBookScaffold {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(vertical = 64.dp, horizontal = 32.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colors.primary),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            MeBookButton(onClick = { loggedInResult() }) {
-                Text("check")
+            AnimatedVisibility(animationState, enter = fadeIn(tween(2000))) {
+                Text(
+                    text = "MeBook",
+                    style = MaterialTheme.typography.h2.copy(
+                        color = MaterialTheme.colors.surface,
+                        fontFamily = FontFamily.Cursive
+                    )
+                )
             }
-
         }
     }
 }
