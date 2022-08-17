@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.navigation.MeBookScreens.AUTH_NAV_ROUTE
 import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
@@ -28,10 +28,22 @@ import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.components.MeBookTextField
 import com.example.mebook.ui.components.text_field_util.PasswordTextFieldState
 import com.example.mebook.ui.components.text_field_util.UsernameTextFieldState
+import com.example.mebook.ui.presentation.login.LoginAction.ConfirmLogin
 
 @Composable
 fun LoginScreen(
     navController: NavController
+) {
+    LoginScreen(
+        navController = navController,
+        viewModel = hiltViewModel()
+    )
+}
+
+@Composable
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel
 ) {
     // todo uiState should be added
     // todo actions should be added
@@ -80,6 +92,7 @@ fun LoginScreen(
                         passwordState.validate()
                     ) {
                         // todo login api call
+                        viewModel.submitAction(ConfirmLogin(usernameState.text, passwordState.text))
                         navController.navigate(HOME_NAV_ROUTE) {
                             popUpTo(AUTH_NAV_ROUTE) {
                                 inclusive = true
@@ -108,5 +121,4 @@ fun LoginScreen(
             )
         }
     }
-
 }
