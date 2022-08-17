@@ -92,7 +92,9 @@ fun AuthenticateScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
             AnimatedVisibility(rememberAnimationState(), enter = fadeIn(tween(2000))) {
                 LottieBox(
