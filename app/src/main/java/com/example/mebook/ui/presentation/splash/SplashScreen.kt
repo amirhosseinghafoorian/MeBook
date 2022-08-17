@@ -27,6 +27,7 @@ import com.example.mebook.navigation.MeBookScreens.AUTHENTICATE_ROUTE
 import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SPLASH_ROUTE
 import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.components.rememberAnimationState
 
 @Composable
 fun SplashScreen(navController: NavController) {
@@ -44,11 +45,7 @@ fun SplashScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    val animationState = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
-        }
-    }
+    val animationState = rememberAnimationState()
 
     LaunchedEffect(animationState.isIdle) {
         if (animationState.isIdle) {
