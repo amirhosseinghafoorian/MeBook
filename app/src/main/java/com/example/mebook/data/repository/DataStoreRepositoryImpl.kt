@@ -15,9 +15,15 @@ class DataStoreRepositoryImpl @Inject constructor(
     override suspend fun isLoggedIn(): Boolean =
         dataStore.data.first()[DataStoreKeys.USERNAME] != null
 
-    override suspend fun setLogin(username : String) {
+    override suspend fun setLogin(username: String) {
         dataStore.edit {
             it[DataStoreKeys.USERNAME] = username
+        }
+    }
+
+    override suspend fun setLogout() {
+        dataStore.edit {
+            it.remove(DataStoreKeys.USERNAME)
         }
     }
 

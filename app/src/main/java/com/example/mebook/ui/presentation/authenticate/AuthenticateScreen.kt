@@ -18,7 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -83,8 +82,7 @@ fun AuthenticateScreen(
         Text(
             text = "Get Started\nSign into your MeBook Account",
             style = MaterialTheme.typography.h6.copy(
-                color = MaterialTheme.colors.secondary,
-                fontWeight = FontWeight.Bold
+                color = MaterialTheme.colors.secondary
             ),
             textAlign = TextAlign.Center
         )

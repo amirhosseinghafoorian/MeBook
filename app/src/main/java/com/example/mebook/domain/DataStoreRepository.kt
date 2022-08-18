@@ -4,5 +4,6 @@ interface DataStoreRepository {
 
     suspend fun isLoggedIn(): Boolean
     suspend fun setLogin(username: String)
+    suspend fun setLogout()
 
 }

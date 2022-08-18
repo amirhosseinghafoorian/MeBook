@@ -52,23 +52,15 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(32.dp))
+
         Text(text = "welcome to home")
 
-        Button(onClick = {
-            navController.navigate(MeBookScreens.AUTH_NAV_ROUTE)
-        }) {
-            Text(text = "auth")
-        }
-
-        Button(onClick = {
-            navController.navigate(MeBookScreens.WRITE_ROUTE)
-        }) {
-            Text(text = "write")
-        }
+        Spacer(modifier = Modifier.height(32.dp))
 
         repeat(fakeList.value) {
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier
@@ -76,8 +68,7 @@ fun HomeScreen(
                     .clip(MaterialTheme.shapes.medium)
                     .height(32.dp)
                     .background(MaterialTheme.colors.secondary)
-            ) {
-            }
+            ) {}
         }
     }
 
