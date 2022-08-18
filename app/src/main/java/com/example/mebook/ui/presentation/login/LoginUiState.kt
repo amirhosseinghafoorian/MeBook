@@ -1,3 +1,6 @@
 package com.example.mebook.ui.presentation.login
 
-class LoginUiState
+data class LoginUiState(
+    val isLoading : Boolean = false,
+    val isLoginSuccess : Boolean = false
+)

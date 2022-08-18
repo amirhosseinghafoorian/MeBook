@@ -2,27 +2,37 @@ package com.example.mebook.ui.presentation.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.R
 import com.example.mebook.navigation.MeBookScreens.AUTH_NAV_ROUTE
 import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
 import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.components.MeBookTextField
@@ -45,15 +55,24 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel
 ) {
-    // todo uiState should be added
-    // todo actions should be added
-    // todo text fields enabled should depend on uiState loading
-    // todo button visibility should depend on uiState loading
+    val uiState by viewModel.uiState.collectAsState()
 
     val usernameState = remember { UsernameTextFieldState() }
     val passwordState = remember { PasswordTextFieldState() }
 
-    MeBookScaffold {
+    LaunchedEffect(key1 = uiState.isLoginSuccess) {
+        if (uiState.isLoginSuccess) {
+            navController.navigate(HOME_NAV_ROUTE) {
+                popUpTo(AUTH_NAV_ROUTE) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
+    MeBookScaffold(
+        snackbarFlow = viewModel.snackbarFlow
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,23 +104,26 @@ fun LoginScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             MeBookButton(
+                enabled = !uiState.isLoading,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     if (
                         usernameState.validate() &&
                         passwordState.validate()
                     ) {
-                        // todo login api call
                         viewModel.submitAction(ConfirmLogin(usernameState.text, passwordState.text))
-                        navController.navigate(HOME_NAV_ROUTE) {
-                            popUpTo(AUTH_NAV_ROUTE) {
-                                inclusive = true
-                            }
-                        }
                     }
                 }
             ) {
-                Text("Login")
+                if (uiState.isLoading) {
+                    LottieBox(
+                        resourceId = R.raw.loading,
+                        modifier = Modifier.size(128.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text("Login")
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

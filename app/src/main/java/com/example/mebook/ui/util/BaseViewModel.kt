@@ -3,7 +3,6 @@ package com.example.mebook.ui.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.ui.util.Constants.INTERNET_ERROR
-import com.example.mebook.ui.util.Constants.UNKOWN_ERROR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,7 +72,11 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
                     onError?.invoke(Exception(INTERNET_ERROR, e.cause))
                     e.printStackTrace()
                 } catch (e: Exception) {
-                    if (showSnackbarOnError) showSnackbar(UNKOWN_ERROR)
+                    if (showSnackbarOnError) {
+                        e.message?.let { errorMessage ->
+                            showSnackbar(errorMessage)
+                        }
+                    }
                     onError?.invoke(e)
                     e.printStackTrace()
                 } finally {
