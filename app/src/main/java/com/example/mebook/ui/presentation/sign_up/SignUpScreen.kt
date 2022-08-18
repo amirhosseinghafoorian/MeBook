@@ -7,26 +7,35 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.R
 import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.ui.components.ConfirmPasswordTextFieldState
+import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.components.MeBookTextField
-import com.example.mebook.ui.components.text_field_util.BasicTextFieldState
 import com.example.mebook.ui.components.text_field_util.PasswordTextFieldState
 import com.example.mebook.ui.components.text_field_util.UsernameTextFieldState
+import com.example.mebook.ui.presentation.sign_up.SignUpAction.ConfirmSignUp
 
 @Composable
 fun SignUpScreen(
@@ -37,11 +46,37 @@ fun SignUpScreen(
     // todo text fields enabled should depend on uiState loading
     // todo button visibility should depend on uiState loading
 
+    SignUpScreen(
+        navController = navController,
+        viewModel = hiltViewModel()
+    )
+}
+
+@Composable
+fun SignUpScreen(
+    navController: NavController,
+    viewModel: SignUpViewModel
+) {
+
+    val uiState by viewModel.uiState.collectAsState()
+
     val usernameState = remember { UsernameTextFieldState() }
     val passwordState = remember { PasswordTextFieldState() }
-    val confirmPasswordState = remember { BasicTextFieldState() }
+    val confirmPasswordState = remember { ConfirmPasswordTextFieldState() }
 
-    MeBookScaffold {
+    LaunchedEffect(key1 = uiState.isLoginSuccess) {
+        if (uiState.isLoginSuccess) {
+            navController.navigate(MeBookScreens.HOME_NAV_ROUTE) {
+                popUpTo(MeBookScreens.AUTH_NAV_ROUTE) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
+    MeBookScaffold(
+        snackbarFlow = viewModel.snackbarFlow
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,23 +120,33 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             MeBookButton(
+                enabled = !uiState.isLoading,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     if (
                         usernameState.validate() &&
                         passwordState.validate() &&
-                        confirmPasswordState.text == passwordState.text
+                        confirmPasswordState.validate() &&
+                        confirmPasswordState.secondaryValidate(passwordState.text)
                     ) {
-                        // todo login api call
-                        navController.navigate(MeBookScreens.HOME_NAV_ROUTE) {
-                            popUpTo(MeBookScreens.AUTH_NAV_ROUTE) {
-                                inclusive = true
-                            }
-                        }
+                        viewModel.submitAction(
+                            ConfirmSignUp(
+                                usernameState.text,
+                                passwordState.text
+                            )
+                        )
                     }
                 }
             ) {
-                Text("Sign Up")
+                if (uiState.isLoading) {
+                    LottieBox(
+                        resourceId = R.raw.loading,
+                        modifier = Modifier.size(128.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text("Sign Up")
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -122,5 +167,4 @@ fun SignUpScreen(
         }
 
     }
-
 }

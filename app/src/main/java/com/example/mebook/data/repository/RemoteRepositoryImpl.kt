@@ -15,6 +15,6 @@ class RemoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signUpUser(username: String, password: String): SignInResponse {
-        TODO("Not yet implemented")
+        return api.signUpUser(username, password).getOrThrow()
     }
 }

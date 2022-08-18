@@ -2,16 +2,13 @@ package com.example.mebook.ui.presentation.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -111,7 +108,12 @@ fun LoginScreen(
                         usernameState.validate() &&
                         passwordState.validate()
                     ) {
-                        viewModel.submitAction(ConfirmLogin(usernameState.text, passwordState.text))
+                        viewModel.submitAction(
+                            ConfirmLogin(
+                                usernameState.text,
+                                passwordState.text
+                            )
+                        )
                     }
                 }
             ) {
