@@ -3,9 +3,11 @@ package com.example.mebook.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.mebook.navigation.MeBookScreens.HOME_ROUTE
+import com.example.mebook.navigation.MeBookScreens.PROFILE_ROUTE
 import com.example.mebook.navigation.MeBookScreens.SEARCH_ROUTE
 import com.example.mebook.navigation.MeBookScreens.WRITE_ROUTE
 
@@ -17,4 +19,5 @@ sealed class BottomNavItem(
     object Home : BottomNavItem("Home", Icons.Default.Home, HOME_ROUTE)
     object Write : BottomNavItem("Write", Icons.Default.Add, WRITE_ROUTE)
     object Search : BottomNavItem("Search", Icons.Default.Search, SEARCH_ROUTE)
+    object Profile : BottomNavItem("Profile", Icons.Default.Person, PROFILE_ROUTE)
 }

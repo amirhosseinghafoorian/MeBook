@@ -32,7 +32,7 @@ fun HomeHost(
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
-            BottomNavigation(navController,mainController)
+            BottomNavigation(navController, mainController)
         }
     ) {
         NavHost(
