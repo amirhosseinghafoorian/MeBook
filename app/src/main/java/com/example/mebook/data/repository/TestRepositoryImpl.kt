@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class TestRepositoryImpl @Inject constructor(
     private val api: MyTestApi,
-    private val dao: TestDao,
+    private val dao: TestDao
 ) : TestRepository {
 
     override suspend fun addUser(user: User) {

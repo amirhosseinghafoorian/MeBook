@@ -18,16 +18,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.mebook.model.view.ArticleView
 
 @Composable
-fun ArticleListItem() {
+fun ArticleListItem(
+    item: ArticleView,
+    onItemClick: (Int) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .requiredHeight(128.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colors.surface)
-            .clickable {  }
+            .clickable { onItemClick(item.articleId) }
             .padding(16.dp)
     ) {
         Row(
@@ -38,7 +42,7 @@ fun ArticleListItem() {
             Text(
                 softWrap = false,
                 overflow = TextOverflow.Ellipsis,
-                text = "UserName to test the functionality of out card under long text",
+                text = item.authorUsername,
                 style = MaterialTheme.typography.body1.copy(
                     color = MaterialTheme.colors.onSurface
                 ),
@@ -48,7 +52,7 @@ fun ArticleListItem() {
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = "8/19/2022",
+                text = item.timestamp.toString(),
                 style = MaterialTheme.typography.body1.copy(
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
                 ),
@@ -61,7 +65,7 @@ fun ArticleListItem() {
         Text(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            text = "Title to test the functionality of out card under long text and again to test the functionality of out card under long text",
+            text = item.title,
             style = MaterialTheme.typography.h6.copy(
                 color = MaterialTheme.colors.onSurface,
                 fontWeight = FontWeight.Bold

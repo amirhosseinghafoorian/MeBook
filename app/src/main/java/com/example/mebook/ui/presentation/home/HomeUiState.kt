@@ -1,3 +1,7 @@
 package com.example.mebook.ui.presentation.home
 
-class HomeUiState
+import com.example.mebook.model.view.ArticleView
+
+data class HomeUiState(
+    val feed: List<ArticleView> = listOf()
+)

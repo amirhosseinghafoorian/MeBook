@@ -2,6 +2,7 @@ package com.example.mebook.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.mebook.data.database.ArticleDao
 import com.example.mebook.data.database.MeBookDatabase
 import com.example.mebook.data.database.TestDao
 import dagger.Module
@@ -31,5 +32,11 @@ object DatabaseModule {
     @Singleton
     fun provideTestDao(meBookDb: MeBookDatabase): TestDao {
         return meBookDb.testDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticleDao(meBookDb: MeBookDatabase): ArticleDao {
+        return meBookDb.articleDao()
     }
 }
