@@ -55,7 +55,9 @@ fun HomeScreen(
             is FeaturedItemClick -> TODO()
             is FeedItemClick -> {}
             FeaturedShowMore -> TODO()
-            FeedShowMore -> {}
+            FeedShowMore -> {
+                viewModel.submitAction(action)
+            }
         }
     }
 }
@@ -69,8 +71,7 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center
+            .verticalScroll(rememberScrollState())
     ) {
         FeedList(
             list = uiState.feed,
@@ -104,7 +105,7 @@ fun FeedList(
     Spacer(modifier = Modifier.height(32.dp))
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().clickable { showMore() }
     ) {
         Spacer(modifier = Modifier.width(16.dp))
 

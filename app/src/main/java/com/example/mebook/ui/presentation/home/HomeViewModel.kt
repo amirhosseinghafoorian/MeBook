@@ -1,12 +1,14 @@
 package com.example.mebook.ui.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.model.database.ArticleEntity
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,11 +16,18 @@ class HomeViewModel @Inject constructor(
     private val localRepository: LocalRepository
 ) : BaseViewModel<HomeAction, HomeUiState>(HomeUiState()) {
 
-    override fun onAction(action: HomeAction) {}
+    override fun onAction(action: HomeAction) {
+        when (action) {
+            is HomeAction.FeaturedItemClick -> TODO()
+            HomeAction.FeaturedShowMore -> TODO()
+            is HomeAction.FeedItemClick -> TODO()
+            HomeAction.FeedShowMore -> {
+                addArticles()
+            }
+        }
+    }
 
     init {
-        addArticles()
-        addFeed()
         getFeed()
     }
 
@@ -28,11 +37,10 @@ class HomeViewModel @Inject constructor(
                 localRepository.getFeed()
             },
             onSuccess = { flow ->
-                viewModelScope.launch {
-                    flow.collect { list ->
-                        updateState { copy(feed = list) }
-                    }
-                }
+                flow.onEach { list ->
+                    Log.i("baby", "viewModel is : $list")
+                    if (list.isNotEmpty()) updateState { copy(feed = list) }
+                }.launchIn(viewModelScope)
             }
         )
     }
@@ -64,6 +72,8 @@ class HomeViewModel @Inject constructor(
                         ArticleEntity(6, "milad", "title6", "body6", System.currentTimeMillis())
                     )
                 )
+            }, onSuccess = {
+                addFeed()
             }
         )
     }
