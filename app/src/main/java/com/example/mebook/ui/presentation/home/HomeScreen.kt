@@ -1,5 +1,8 @@
 package com.example.mebook.ui.presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,8 +11,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,12 +26,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.R
 import com.example.mebook.model.view.ArticleView
+import com.example.mebook.ui.components.AnimationStateReactor
 import com.example.mebook.ui.components.ArticleListItem
+import com.example.mebook.ui.components.LottieBox
+import com.example.mebook.ui.components.rememberAnimationState
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
 import com.example.mebook.ui.presentation.home.HomeAction.FeedItemClick
@@ -66,6 +76,23 @@ fun HomeScreen(
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        val animationState = rememberAnimationState()
+        AnimationStateReactor(animationState, uiState.isLoading)
+        AnimatedVisibility(animationState, enter = fadeIn(tween())) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 32.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                LottieBox(
+                    resourceId = R.raw.loading,
+                    modifier = Modifier.size(128.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+        }
+
         FeedList(
             list = uiState.feed,
             showMore = {
@@ -97,7 +124,7 @@ fun FeedList(
     onItemClick: (Int) -> Unit
 ) {
     if (list.isNotEmpty()) {
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -160,7 +187,7 @@ fun FeaturedList(
     onItemClick: (Int) -> Unit
 ) {
     if (list.isNotEmpty()) {
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth()

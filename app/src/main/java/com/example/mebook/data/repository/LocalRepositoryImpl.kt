@@ -6,6 +6,7 @@ import com.example.mebook.domain.LocalRepository
 import com.example.mebook.model.database.ArticleEntity
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.model.view.ArticleView
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -15,12 +16,14 @@ class LocalRepositoryImpl @Inject constructor(
 ) : LocalRepository {
 
     override suspend fun addArticles(articles: List<ArticleEntity>) {
+        delay(1000)
         articles.forEach {
             articleDao.insertArticle(it)
         }
     }
 
     override suspend fun addFeed(feed: List<FeedEntity>) {
+        delay(1000)
         feed.forEach {
             articleDao.insertFeed(it)
         }

@@ -1,6 +1,5 @@
 package com.example.mebook.ui.presentation.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.model.database.ArticleEntity
@@ -24,7 +23,7 @@ class HomeViewModel @Inject constructor(
         when (action) {
             is FeedItemClick -> {}
             is FeaturedItemClick -> {}
-            FeedShowMore -> {}
+            FeedShowMore -> addArticles()
             FeaturedShowMore -> {}
         }
     }
@@ -41,7 +40,6 @@ class HomeViewModel @Inject constructor(
             },
             onSuccess = { flow ->
                 flow.onEach { list ->
-                    Log.i("baby", "viewModel is : $list")
                     if (list.isNotEmpty()) updateState { copy(feed = list) }
                 }.launchIn(viewModelScope)
             }
@@ -59,6 +57,9 @@ class HomeViewModel @Inject constructor(
                         FeedEntity(4),
                     )
                 )
+            },
+            onLoading = { value ->
+                if (!value) updateState { copy(isLoading = value) }
             }
         )
     }
@@ -78,6 +79,9 @@ class HomeViewModel @Inject constructor(
                 )
             }, onSuccess = {
                 addFeed()
+            },
+            onLoading = { value ->
+                if (value) updateState { copy(isLoading = value) }
             }
         )
     }
