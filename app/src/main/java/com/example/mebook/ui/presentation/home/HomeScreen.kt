@@ -1,6 +1,6 @@
 package com.example.mebook.ui.presentation.home
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,9 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,10 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mebook.navigation.MeBookScreens
+import com.example.mebook.ui.components.ArticleListItem
 
 @Composable
 fun HomeScreen(
@@ -40,36 +42,131 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel
 ) {
-    val fakeList = remember {
-        mutableStateOf(50)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
+        ForYouFakeList()
 
-        Text(text = "welcome to home")
+        FeaturedFakeList()
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(80.dp))
+    }
+}
 
-        repeat(fakeList.value) {
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.medium)
-                    .height(32.dp)
-                    .background(MaterialTheme.colors.secondary)
-            ) {}
-        }
+@Composable
+fun ForYouFakeList() {
+    val fakeList = remember {
+        mutableStateOf(3)
     }
 
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            text = "For You",
+            style = MaterialTheme.typography.body1.copy(
+                color = MaterialTheme.colors.secondary,
+                fontWeight = FontWeight.ExtraBold,
+            )
+        )
+    }
+
+    if (fakeList.value > 5) {
+        for (i in 0 until 5) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ArticleListItem()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .requiredHeight(64.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .clickable { }
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Show more",
+                style = MaterialTheme.typography.h6.copy(
+                    color = MaterialTheme.colors.secondary,
+                )
+            )
+        }
+    } else {
+        repeat(fakeList.value) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ArticleListItem()
+        }
+    }
+}
+
+@Composable
+fun FeaturedFakeList() {
+    val fakeList = remember {
+        mutableStateOf(10)
+    }
+
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            text = "Featured",
+            style = MaterialTheme.typography.body1.copy(
+                color = MaterialTheme.colors.secondary,
+                fontWeight = FontWeight.ExtraBold,
+            )
+        )
+    }
+
+    if (fakeList.value > 5) {
+        for (i in 0 until 5) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ArticleListItem()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .requiredHeight(64.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .clickable { }
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Show more",
+                style = MaterialTheme.typography.h6.copy(
+                    color = MaterialTheme.colors.secondary,
+                )
+            )
+        }
+    } else {
+        repeat(fakeList.value) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ArticleListItem()
+        }
+    }
 }
