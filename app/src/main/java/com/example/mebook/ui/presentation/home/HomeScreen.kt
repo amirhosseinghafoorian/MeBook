@@ -100,9 +100,7 @@ fun FeedList(
         Spacer(modifier = Modifier.height(32.dp))
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { showMore() }
+            modifier = Modifier.fillMaxWidth()
         ) {
             Spacer(modifier = Modifier.width(16.dp))
 
