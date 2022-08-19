@@ -54,8 +54,8 @@ fun BottomNavigation(
                         fontSize = 12.sp,
                     )
                 },
-                selectedContentColor = Color.Black,
-                unselectedContentColor = Color.Black.copy(0.4f),
+                selectedContentColor = MaterialTheme.colors.secondary,
+                unselectedContentColor = MaterialTheme.colors.surface,
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screen_route,
                 onClick = {
