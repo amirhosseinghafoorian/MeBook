@@ -51,14 +51,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     HomeScreen(uiState) { action ->
-        when (action) {
-            is FeaturedItemClick -> TODO()
-            is FeedItemClick -> {}
-            FeaturedShowMore -> TODO()
-            FeedShowMore -> {
-                viewModel.submitAction(action)
-            }
-        }
+        viewModel.submitAction(action)
     }
 }
 
@@ -83,14 +76,15 @@ fun HomeScreen(
             }
         )
 
-        /*FeaturedList(
+        FeaturedList(
+            list = uiState.featured,
             showMore = {
                 action(FeaturedShowMore)
             },
             onItemClick = {
                 action(FeaturedItemClick(it))
             }
-        )*/
+        )
 
         Spacer(modifier = Modifier.height(80.dp))
     }
@@ -102,23 +96,24 @@ fun FeedList(
     showMore: () -> Unit,
     onItemClick: (Int) -> Unit
 ) {
-    Spacer(modifier = Modifier.height(32.dp))
-
-    Row(
-        modifier = Modifier.fillMaxWidth().clickable { showMore() }
-    ) {
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Text(
-            text = "For You",
-            style = MaterialTheme.typography.body1.copy(
-                color = MaterialTheme.colors.secondary,
-                fontWeight = FontWeight.ExtraBold,
-            )
-        )
-    }
-
     if (list.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { showMore() }
+        ) {
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = "For You",
+                style = MaterialTheme.typography.body1.copy(
+                    color = MaterialTheme.colors.secondary,
+                    fontWeight = FontWeight.ExtraBold,
+                )
+            )
+        }
 
         if (list.size > 5) {
             for (i in 0 until 5) {
@@ -160,62 +155,67 @@ fun FeedList(
     }
 }
 
-/*@Composable
+@Composable
 fun FeaturedList(
+    list: List<ArticleView>,
     showMore: () -> Unit,
     onItemClick: (Int) -> Unit
 ) {
-    val fakeList = remember {
-        mutableStateOf(10)
-    }
+    if (list.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(32.dp))
 
-    Spacer(modifier = Modifier.height(32.dp))
-
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Text(
-            text = "Featured",
-            style = MaterialTheme.typography.body1.copy(
-                color = MaterialTheme.colors.secondary,
-                fontWeight = FontWeight.ExtraBold,
-            )
-        )
-    }
-
-    if (fakeList.value > 5) {
-        for (i in 0 until 5) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            ArticleListItem()
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .requiredHeight(64.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .clickable { }
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            modifier = Modifier.fillMaxWidth()
         ) {
+            Spacer(modifier = Modifier.width(16.dp))
+
             Text(
-                text = "Show more",
-                style = MaterialTheme.typography.h6.copy(
+                text = "Featured",
+                style = MaterialTheme.typography.body1.copy(
                     color = MaterialTheme.colors.secondary,
+                    fontWeight = FontWeight.ExtraBold,
                 )
             )
         }
-    } else {
-        repeat(fakeList.value) {
+
+        if (list.size > 5) {
+            for (i in 0 until 5) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ArticleListItem(list[i]) {
+                    onItemClick(it)
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            ArticleListItem()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .requiredHeight(64.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable {
+                        showMore()
+                    }
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Show more",
+                    style = MaterialTheme.typography.h6.copy(
+                        color = MaterialTheme.colors.secondary,
+                    )
+                )
+            }
+        } else {
+            list.forEach { item ->
+                Spacer(modifier = Modifier.height(16.dp))
+
+                ArticleListItem(item) {
+                    onItemClick(it)
+                }
+            }
         }
     }
-}*/
+}

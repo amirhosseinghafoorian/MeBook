@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.model.database.ArticleEntity
 import com.example.mebook.model.database.FeedEntity
+import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
+import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
+import com.example.mebook.ui.presentation.home.HomeAction.FeedItemClick
+import com.example.mebook.ui.presentation.home.HomeAction.FeedShowMore
 import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -18,16 +22,15 @@ class HomeViewModel @Inject constructor(
 
     override fun onAction(action: HomeAction) {
         when (action) {
-            is HomeAction.FeaturedItemClick -> TODO()
-            HomeAction.FeaturedShowMore -> TODO()
-            is HomeAction.FeedItemClick -> TODO()
-            HomeAction.FeedShowMore -> {
-                addArticles()
-            }
+            is FeedItemClick -> {}
+            is FeaturedItemClick -> {}
+            FeedShowMore -> {}
+            FeaturedShowMore -> {}
         }
     }
 
     init {
+        addArticles()
         getFeed()
     }
 
@@ -46,6 +49,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun addFeed() {
+        // todo should call the api and add with it's response
         makeSuspendCall(
             block = {
                 localRepository.addFeed(
