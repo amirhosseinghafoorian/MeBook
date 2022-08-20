@@ -16,14 +16,12 @@ class LocalRepositoryImpl @Inject constructor(
 ) : LocalRepository {
 
     override suspend fun addArticles(articles: List<ArticleEntity>) {
-        delay(1000)
         articles.forEach {
             articleDao.insertArticle(it)
         }
     }
 
     override suspend fun addFeed(feed: List<FeedEntity>) {
-        delay(1000)
         feed.forEach {
             articleDao.insertFeed(it)
         }
