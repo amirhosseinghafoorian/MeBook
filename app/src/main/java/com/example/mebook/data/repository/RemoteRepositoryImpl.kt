@@ -3,6 +3,7 @@ package com.example.mebook.data.repository
 import com.example.mebook.data.remote.MeBookApi
 import com.example.mebook.data.util.getOrThrow
 import com.example.mebook.data.util.toArticleEntity
+import com.example.mebook.data.util.toFeaturedEntity
 import com.example.mebook.data.util.toFeedEntity
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
@@ -29,10 +30,20 @@ class RemoteRepositoryImpl @Inject constructor(
         }
         localRepository.addArticles(articleList.shortFeed.toArticleEntity())
         localRepository.clearFeed()
-        localRepository.addFeed(feedList.toFeedEntity())
+        localRepository.addFeed(
+            feedList.map { it.toFeedEntity() }
+        )
     }
 
     override suspend fun updateFeatured() {
-        TODO("Not yet implemented")
+        val articleList = api.getShortFeatured().getOrThrow()
+        val featuredList = articleList.shortFeatured.map {
+            it.articleId
+        }
+        localRepository.addArticles(articleList.shortFeatured.toArticleEntity())
+        localRepository.clearFeatured()
+        localRepository.addFeatured(
+            featuredList.map { it.toFeaturedEntity() }
+        )
     }
 }

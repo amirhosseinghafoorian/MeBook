@@ -3,8 +3,6 @@ package com.example.mebook.ui.presentation.home
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
-import com.example.mebook.model.database.ArticleEntity
-import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
 import com.example.mebook.ui.presentation.home.HomeAction.FeedItemClick
@@ -25,14 +23,15 @@ class HomeViewModel @Inject constructor(
         when (action) {
             is FeedItemClick -> {}
             is FeaturedItemClick -> {}
-            FeedShowMore -> addArticles()
-            FeaturedShowMore -> {}
+            FeedShowMore -> updateFeed()
+            FeaturedShowMore -> updateFeatured()
         }
     }
 
     init {
-        addArticles()
+        updateFeatured()
         getFeed()
+        getFeatured()
     }
 
     private fun getFeed() {
@@ -48,10 +47,37 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun addArticles() {
+    private fun getFeatured() {
+        makeSuspendCall(
+            block = {
+                localRepository.getFeatured()
+            },
+            onSuccess = { flow ->
+                flow.onEach { list ->
+                    if (list.isNotEmpty()) updateState { copy(featured = list) }
+                }.launchIn(viewModelScope)
+            }
+        )
+    }
+
+    private fun updateFeed() {
         makeSuspendCall(
             block = {
                 remoteRepository.updateFeed()
+            },
+            onLoading = { value ->
+                updateState { copy(isLoading = value) }
+            }
+        )
+    }
+
+    private fun updateFeatured() {
+        makeSuspendCall(
+            block = {
+                remoteRepository.updateFeatured()
+            },
+            onSuccess = {
+                updateFeed()
             },
             onLoading = { value ->
                 updateState { copy(isLoading = value) }

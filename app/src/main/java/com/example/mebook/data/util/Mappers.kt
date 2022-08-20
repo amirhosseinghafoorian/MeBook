@@ -1,23 +1,31 @@
 package com.example.mebook.data.util
 
 import com.example.mebook.model.database.ArticleEntity
+import com.example.mebook.model.database.FeaturedArticle
+import com.example.mebook.model.database.FeaturedEntity
 import com.example.mebook.model.database.FeedArticle
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.model.remote.GetArticleResponse
 import com.example.mebook.model.view.ArticleItemView
 
-fun FeedArticle.toArticleView(): ArticleItemView {
+fun ArticleEntity.toArticleView(): ArticleItemView {
     return ArticleItemView(
-        articleId = articleEntity.articleId,
-        authorUsername = articleEntity.authorUsername,
-        title = articleEntity.title,
-        timestamp = articleEntity.timestamp,
+        articleId = articleId,
+        authorUsername = authorUsername,
+        title = title,
+        timestamp = timestamp,
     )
 }
 
-fun List<FeedArticle>.toArticleView(): List<ArticleItemView> {
+fun List<FeedArticle>.feedToArticleView(): List<ArticleItemView> {
     return this.map {
-        it.toArticleView()
+        it.articleEntity.toArticleView()
+    }
+}
+
+fun List<FeaturedArticle>.featuredToArticleView(): List<ArticleItemView> {
+    return this.map {
+        it.articleEntity.toArticleView()
     }
 }
 
@@ -39,6 +47,12 @@ fun List<GetArticleResponse>.toArticleEntity(): List<ArticleEntity> {
 
 fun Int.toFeedEntity(): FeedEntity {
     return FeedEntity(
+        articleId = this
+    )
+}
+
+fun Int.toFeaturedEntity(): FeaturedEntity {
+    return FeaturedEntity(
         articleId = this
     )
 }
