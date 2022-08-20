@@ -5,7 +5,7 @@ import com.example.mebook.data.util.toArticleView
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.model.database.ArticleEntity
 import com.example.mebook.model.database.FeedEntity
-import com.example.mebook.model.view.ArticleView
+import com.example.mebook.model.view.ArticleItemView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -29,7 +29,7 @@ class LocalRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFeed(): Flow<List<ArticleView>> {
+    override suspend fun getFeed(): Flow<List<ArticleItemView>> {
         return articleDao.getFeed().map {
             it.toArticleView()
         }

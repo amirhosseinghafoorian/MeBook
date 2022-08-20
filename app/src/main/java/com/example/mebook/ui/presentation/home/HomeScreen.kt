@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.R
-import com.example.mebook.model.view.ArticleView
+import com.example.mebook.model.view.ArticleItemView
 import com.example.mebook.ui.components.AnimationStateReactor
 import com.example.mebook.ui.components.ArticleListItem
 import com.example.mebook.ui.components.LottieBox
@@ -119,7 +119,7 @@ fun HomeScreen(
 
 @Composable
 fun FeedList(
-    list: List<ArticleView>,
+    list: List<ArticleItemView>,
     showMore: () -> Unit,
     onItemClick: (Int) -> Unit
 ) {
@@ -182,7 +182,7 @@ fun FeedList(
 
 @Composable
 fun FeaturedList(
-    list: List<ArticleView>,
+    list: List<ArticleItemView>,
     showMore: () -> Unit,
     onItemClick: (Int) -> Unit
 ) {

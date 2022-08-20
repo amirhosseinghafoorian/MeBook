@@ -18,11 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.mebook.model.view.ArticleView
+import com.example.mebook.model.view.ArticleItemView
 
 @Composable
 fun ArticleListItem(
-    item: ArticleView,
+    item: ArticleItemView,
     onItemClick: (Int) -> Unit
 ) {
     Column(

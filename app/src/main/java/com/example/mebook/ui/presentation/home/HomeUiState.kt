@@ -1,9 +1,9 @@
 package com.example.mebook.ui.presentation.home
 
-import com.example.mebook.model.view.ArticleView
+import com.example.mebook.model.view.ArticleItemView
 
 data class HomeUiState(
     val isLoading : Boolean = false,
-    val feed: List<ArticleView> = listOf(),
-    val featured: List<ArticleView> = listOf()
+    val feed: List<ArticleItemView> = listOf(),
+    val featured: List<ArticleItemView> = listOf()
 )
