@@ -1,7 +1,7 @@
 package com.example.mebook.di
 
 import com.example.mebook.BuildConfig
-import com.example.mebook.data.remote.MyTestApi
+import com.example.mebook.data.remote.MeBookApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +43,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMyTestService(retrofit: Retrofit): MyTestApi = retrofit
-        .create(MyTestApi::class.java)
+    fun provideMeBookService(retrofit: Retrofit): MeBookApi = retrofit
+        .create(MeBookApi::class.java)
 
 }

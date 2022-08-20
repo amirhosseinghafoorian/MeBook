@@ -2,6 +2,7 @@ package com.example.mebook.ui.presentation.home
 
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.LocalRepository
+import com.example.mebook.domain.RemoteRepository
 import com.example.mebook.model.database.ArticleEntity
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val localRepository: LocalRepository
+    private val localRepository: LocalRepository,
+    private val remoteRepository: RemoteRepository,
 ) : BaseViewModel<HomeAction, HomeUiState>(HomeUiState()) {
 
     override fun onAction(action: HomeAction) {
@@ -46,42 +48,13 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    private fun addFeed() {
-        // todo should call the api and add with it's response
-        makeSuspendCall(
-            block = {
-                localRepository.addFeed(
-                    listOf(
-                        FeedEntity(2),
-                        FeedEntity(3),
-                        FeedEntity(4),
-                    )
-                )
-            },
-            onLoading = { value ->
-                if (!value) updateState { copy(isLoading = value) }
-            }
-        )
-    }
-
     private fun addArticles() {
         makeSuspendCall(
             block = {
-                localRepository.addArticles(
-                    listOf(
-                        ArticleEntity(1, "ali", "title1", "body1", System.currentTimeMillis()),
-                        ArticleEntity(2, "reza", "title2", "body2", System.currentTimeMillis()),
-                        ArticleEntity(3, "javad", "title3", "body3", System.currentTimeMillis()),
-                        ArticleEntity(4, "hossein", "title4", "body4", System.currentTimeMillis()),
-                        ArticleEntity(5, "sina", "title5", "body5", System.currentTimeMillis()),
-                        ArticleEntity(6, "milad", "title6", "body6", System.currentTimeMillis())
-                    )
-                )
-            }, onSuccess = {
-                addFeed()
+                remoteRepository.updateFeed()
             },
             onLoading = { value ->
-                if (value) updateState { copy(isLoading = value) }
+                updateState { copy(isLoading = value) }
             }
         )
     }

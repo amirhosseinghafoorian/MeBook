@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface LocalRepository {
     suspend fun addArticles(articles: List<ArticleEntity>)
     suspend fun addFeed(feed: List<FeedEntity>)
+    suspend fun clearFeed()
     suspend fun getFeed(): Flow<List<ArticleItemView>>
     suspend fun deleteArticles(articleIds: List<Int>)
 }

@@ -29,6 +29,10 @@ class LocalRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearFeed() {
+        articleDao.clearFeed()
+    }
+
     override suspend fun getFeed(): Flow<List<ArticleItemView>> {
         return articleDao.getFeed().map {
             it.toArticleView()
