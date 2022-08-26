@@ -42,5 +42,8 @@ fun SearchScreen(
                 viewModel.submitAction(UpdateTextField(it))
             }
         )
+
+        // todo add list
+        //  add a text or lottie for empty list
     }
 }
