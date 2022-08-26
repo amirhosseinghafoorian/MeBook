@@ -52,7 +52,7 @@ fun ArticleListItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = item.timestamp.toString(),
+                text = item.publishDate.toString(),
                 style = MaterialTheme.typography.body1.copy(
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
                 ),

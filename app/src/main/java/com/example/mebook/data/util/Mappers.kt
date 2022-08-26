@@ -13,7 +13,7 @@ fun ArticleEntity.toArticleView(): ArticleItemView {
         articleId = articleId,
         authorUsername = authorUsername,
         title = title,
-        timestamp = timestamp,
+        publishDate = publishDate,
     )
 }
 
@@ -34,7 +34,7 @@ fun GetArticleResponse.toArticleEntity(): ArticleEntity {
         articleId = articleId,
         authorUsername = authorUsername,
         title = title,
-        timestamp = timeStamp,
+        publishDate = publishDate,
         body = body
     )
 }

@@ -43,6 +43,9 @@ class HomeViewModel @Inject constructor(
                 flow.onEach { list ->
                     if (list.isNotEmpty()) updateState { copy(feed = list) }
                 }.launchIn(viewModelScope)
+            },
+            onError = {
+                showSnackbar(it.message.toString())
             }
         )
     }
@@ -56,6 +59,9 @@ class HomeViewModel @Inject constructor(
                 flow.onEach { list ->
                     if (list.isNotEmpty()) updateState { copy(featured = list) }
                 }.launchIn(viewModelScope)
+            },
+            onError = {
+                showSnackbar(it.message.toString())
             }
         )
     }

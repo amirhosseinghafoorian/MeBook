@@ -1,8 +1,8 @@
 package com.example.mebook.data.remote
 
 import com.example.mebook.model.remote.BaseResponse
-import com.example.mebook.model.remote.GetShortFeaturedResponse
-import com.example.mebook.model.remote.GetShortFeedResponse
+import com.example.mebook.model.remote.GetFeaturedArticlesResponse
+import com.example.mebook.model.remote.GetUserFeedArticlesResponse
 import com.example.mebook.model.remote.ServerTestModel
 import com.example.mebook.model.remote.SignInResponse
 import retrofit2.http.GET
@@ -25,10 +25,14 @@ interface MeBookApi {
         @Query("password") password: String,
     ): BaseResponse<SignInResponse>
 
-    @GET("getShortFeed")
-    suspend fun getShortFeed(): BaseResponse<GetShortFeedResponse>
+    @GET("getUserFeedArticles")
+    suspend fun getUserFeedArticles(
+        @Query("username") username: String,
+    ): BaseResponse<GetUserFeedArticlesResponse>
 
-    @GET("getShortFeatured")
-    suspend fun getShortFeatured(): BaseResponse<GetShortFeaturedResponse>
+    @GET("getFeaturedArticles")
+    suspend fun getFeaturedArticles(
+        @Query("username") username: String,
+    ): BaseResponse<GetFeaturedArticlesResponse>
 
 }

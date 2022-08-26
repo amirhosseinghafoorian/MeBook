@@ -41,7 +41,7 @@ fun HomeHost(
             modifier = modifier
         ) {
             composable(route = HOME_ROUTE) {
-                HomeScreen(mainController)
+                HomeScreen(mainController, scaffoldState)
             }
             composable(route = SEARCH_ROUTE) {
                 SearchScreen(mainController)

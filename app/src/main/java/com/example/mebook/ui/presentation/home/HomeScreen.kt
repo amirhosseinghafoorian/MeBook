@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,6 +38,7 @@ import com.example.mebook.model.view.ArticleItemView
 import com.example.mebook.ui.components.AnimationStateReactor
 import com.example.mebook.ui.components.ArticleListItem
 import com.example.mebook.ui.components.LottieBox
+import com.example.mebook.ui.components.MeBookSnackbarObserver
 import com.example.mebook.ui.components.rememberAnimationState
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
@@ -44,10 +47,12 @@ import com.example.mebook.ui.presentation.home.HomeAction.FeedShowMore
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    scaffoldState: ScaffoldState,
 ) {
     HomeScreen(
         navController = navController,
+        scaffoldState = scaffoldState,
         viewModel = hiltViewModel()
     )
 }
@@ -55,8 +60,13 @@ fun HomeScreen(
 @Composable
 fun HomeScreen(
     navController: NavController,
+    scaffoldState: ScaffoldState,
     viewModel: HomeViewModel
 ) {
+    MeBookSnackbarObserver(
+        scaffoldState = scaffoldState,
+        snackbarFlow = viewModel.snackbarFlow
+    )
 
     val uiState by viewModel.uiState.collectAsState()
 

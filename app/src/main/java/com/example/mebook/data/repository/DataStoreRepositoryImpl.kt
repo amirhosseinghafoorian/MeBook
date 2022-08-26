@@ -27,4 +27,8 @@ class DataStoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUsername(): String? {
+        return dataStore.data.first()[DataStoreKeys.USERNAME]
+    }
+
 }

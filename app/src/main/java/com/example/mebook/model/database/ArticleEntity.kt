@@ -9,5 +9,5 @@ data class ArticleEntity(
     val authorUsername: String,
     val title: String,
     val body: String,
-    val timestamp: Long,
+    val publishDate: Long,
 )

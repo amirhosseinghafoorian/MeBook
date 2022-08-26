@@ -4,5 +4,5 @@ data class ArticleItemView(
     val articleId: Int,
     val authorUsername: String,
     val title: String,
-    val timestamp: Long,
+    val publishDate: Long,
 )
