@@ -36,6 +36,7 @@ fun SearchScreen(
             .padding(16.dp),
     ) {
         MeBookTextField(
+            placeholder = "Search for Users",
             state = uiState.searchState,
             onValueChange = {
                 viewModel.submitAction(UpdateTextField(it))

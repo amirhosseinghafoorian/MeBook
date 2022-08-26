@@ -25,16 +25,18 @@ class SearchViewModel @Inject constructor(
         uiState.value.searchState.onChanged(value)
         searchJob?.cancel()
 
-        makeSuspendCall(
-            block = {
-                remoteRepository.searchUsers(value)
-            },
-            onSuccess = { result ->
-                // todo update ui with result
-            },
-            suspendJob = {
-                searchJob = it
-            }
-        )
+        if (value.isNotEmpty()) {
+            makeSuspendCall(
+                block = {
+                    remoteRepository.searchUsers(value)
+                },
+                onSuccess = { result ->
+                    // todo update ui with result
+                },
+                suspendJob = {
+                    searchJob = it
+                }
+            )
+        }
     }
 }
