@@ -44,21 +44,3 @@ fun List<GetArticleResponse>.toArticleEntity(): List<ArticleEntity> {
         it.toArticleEntity()
     }
 }
-
-fun Int.toFeedEntity(): FeedEntity {
-    return FeedEntity(
-        articleId = this
-    )
-}
-
-fun Int.toFeaturedEntity(): FeaturedEntity {
-    return FeaturedEntity(
-        articleId = this
-    )
-}
-
-fun List<Int>.toFeedEntity(): List<FeedEntity> {
-    return this.map {
-        it.toFeedEntity()
-    }
-}

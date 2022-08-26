@@ -23,10 +23,10 @@ interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFeatured(vararg featured: FeaturedEntity)
 
-    @Query("SELECT * FROM feed")
+    @Query("SELECT * FROM feed order by publishDate desc")
     fun getFeed(): Flow<List<FeedArticle>>
 
-    @Query("SELECT * FROM featured")
+    @Query("SELECT * FROM featured order by publishDate desc")
     fun getFeatured(): Flow<List<FeaturedArticle>>
 
     @Query("DELETE FROM articles where articleId = :id")

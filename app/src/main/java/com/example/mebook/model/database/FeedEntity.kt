@@ -15,5 +15,6 @@ import androidx.room.PrimaryKey
     )]
 )
 data class FeedEntity(
-    @PrimaryKey val articleId: Int
+    @PrimaryKey val articleId: Int,
+    val publishDate: Long
 )

@@ -3,11 +3,11 @@ package com.example.mebook.data.repository
 import com.example.mebook.data.remote.MeBookApi
 import com.example.mebook.data.util.getOrThrow
 import com.example.mebook.data.util.toArticleEntity
-import com.example.mebook.data.util.toFeaturedEntity
-import com.example.mebook.data.util.toFeedEntity
 import com.example.mebook.domain.DataStoreRepository
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
+import com.example.mebook.model.database.FeaturedEntity
+import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.model.remote.SignInResponse
 import javax.inject.Inject
 
@@ -33,16 +33,14 @@ class RemoteRepositoryImpl @Inject constructor(
                 .getOrThrow()
                 .feedArticles
             val feedList = articleList.map { article ->
-                article.articleId
+                FeedEntity(article.articleId, article.publishDate)
             }
 
             localRepository.addArticles(
                 articleList.toArticleEntity()
             )
             localRepository.clearFeed()
-            localRepository.addFeed(
-                feedList.map { it.toFeedEntity() }
-            )
+            localRepository.addFeed(feedList)
 
         } ?: run {
             throw Exception("Username not found")
@@ -57,16 +55,14 @@ class RemoteRepositoryImpl @Inject constructor(
                 .getOrThrow()
                 .featuredArticles
             val featuredList = articleList.map { article ->
-                article.articleId
+                FeaturedEntity(article.articleId, article.publishDate)
             }
 
             localRepository.addArticles(
                 articleList.toArticleEntity()
             )
             localRepository.clearFeatured()
-            localRepository.addFeatured(
-                featuredList.map { it.toFeaturedEntity() }
-            )
+            localRepository.addFeatured(featuredList)
 
         } ?: run {
             throw Exception("Username not found")

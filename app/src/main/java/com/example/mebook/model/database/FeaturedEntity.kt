@@ -15,6 +15,7 @@ import androidx.room.PrimaryKey
     )]
 )
 data class FeaturedEntity(
-    @PrimaryKey val articleId: Int
+    @PrimaryKey val articleId: Int,
+    val publishDate: Long,
 )
 
