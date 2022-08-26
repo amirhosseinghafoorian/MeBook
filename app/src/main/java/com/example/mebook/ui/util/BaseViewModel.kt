@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.ui.util.Constants.INTERNET_ERROR
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -58,6 +59,7 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
         onSuccess: ((R) -> Unit)? = null,
         onError: ((Exception) -> Unit)? = null,
         onLoading: ((Boolean) -> Unit)? = null,
+        suspendJob: ((Job) -> Unit)? = null,
         showSnackbarOnError: Boolean = true
     ) {
         viewModelScope.launch {
@@ -83,6 +85,8 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
                     onLoading?.invoke(false)
                 }
             }
+        }.apply {
+            suspendJob?.invoke(this)
         }
     }
 

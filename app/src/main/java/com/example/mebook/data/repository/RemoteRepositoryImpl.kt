@@ -3,12 +3,14 @@ package com.example.mebook.data.repository
 import com.example.mebook.data.remote.MeBookApi
 import com.example.mebook.data.util.getOrThrow
 import com.example.mebook.data.util.toArticleEntity
+import com.example.mebook.data.util.toUserItemView
 import com.example.mebook.domain.DataStoreRepository
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
 import com.example.mebook.model.database.FeaturedEntity
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.model.remote.SignInResponse
+import com.example.mebook.model.view.UserItemView
 import javax.inject.Inject
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -64,6 +66,20 @@ class RemoteRepositoryImpl @Inject constructor(
             localRepository.clearFeatured()
             localRepository.addFeatured(featuredList)
 
+        } ?: run {
+            throw Exception("Username not found")
+        }
+    }
+
+    override suspend fun searchUsers(text: String): List<UserItemView> {
+        dataStoreRepository.getUsername()?.let { username ->
+            return api
+                .searchUser(username, text)
+                .getOrThrow()
+                .foundUsers
+                .map {
+                    it.toUserItemView()
+                }
         } ?: run {
             throw Exception("Username not found")
         }

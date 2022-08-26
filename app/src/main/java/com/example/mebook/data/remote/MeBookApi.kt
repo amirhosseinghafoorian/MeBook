@@ -3,6 +3,7 @@ package com.example.mebook.data.remote
 import com.example.mebook.model.remote.BaseResponse
 import com.example.mebook.model.remote.GetFeaturedArticlesResponse
 import com.example.mebook.model.remote.GetUserFeedArticlesResponse
+import com.example.mebook.model.remote.SearchUserResponse
 import com.example.mebook.model.remote.ServerTestModel
 import com.example.mebook.model.remote.SignInResponse
 import retrofit2.http.GET
@@ -34,5 +35,11 @@ interface MeBookApi {
     suspend fun getFeaturedArticles(
         @Query("username") username: String,
     ): BaseResponse<GetFeaturedArticlesResponse>
+
+    @GET("searchUser")
+    suspend fun searchUser(
+        @Query("username") username: String,
+        @Query("searchUsername") searchUsername: String,
+    ): BaseResponse<SearchUserResponse>
 
 }
