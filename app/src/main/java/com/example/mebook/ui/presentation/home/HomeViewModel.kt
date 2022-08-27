@@ -1,11 +1,10 @@
 package com.example.mebook.ui.presentation.home
 
 import androidx.lifecycle.viewModelScope
+import com.example.mebook.AppConstants.shortArticleCount
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
-import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
-import com.example.mebook.ui.presentation.home.HomeAction.FeedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeedShowMore
 import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,10 +20,9 @@ class HomeViewModel @Inject constructor(
 
     override fun onAction(action: HomeAction) {
         when (action) {
-            is FeedItemClick -> {}
-            is FeaturedItemClick -> {}
             FeedShowMore -> updateFeed()
             FeaturedShowMore -> updateFeatured()
+            else -> throw IllegalArgumentException("not supported action")
         }
     }
 
@@ -41,7 +39,12 @@ class HomeViewModel @Inject constructor(
             },
             onSuccess = { flow ->
                 flow.onEach { list ->
-                    if (list.isNotEmpty()) updateState { copy(feed = list) }
+                    if (list.isNotEmpty() && list.size > shortArticleCount) updateState {
+                        copy(feed = list.subList(0, shortArticleCount), canShowMoreFeed = true)
+                    }
+                    else if (list.isNotEmpty()) updateState {
+                        copy(feed = list.subList(0, list.size))
+                    }
                 }.launchIn(viewModelScope)
             },
             onError = {
@@ -57,7 +60,15 @@ class HomeViewModel @Inject constructor(
             },
             onSuccess = { flow ->
                 flow.onEach { list ->
-                    if (list.isNotEmpty()) updateState { copy(featured = list) }
+                    if (list.isNotEmpty() && list.size > shortArticleCount) updateState {
+                        copy(
+                            featured = list.subList(0, shortArticleCount),
+                            canShowMoreFeatured = true
+                        )
+                    }
+                    else if (list.isNotEmpty()) updateState {
+                        copy(featured = list.subList(0, list.size))
+                    }
                 }.launchIn(viewModelScope)
             },
             onError = {

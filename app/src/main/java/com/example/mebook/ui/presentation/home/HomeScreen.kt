@@ -3,7 +3,6 @@ package com.example.mebook.ui.presentation.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -21,13 +19,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,14 +31,16 @@ import androidx.navigation.NavController
 import com.example.mebook.R
 import com.example.mebook.model.view.ArticleItemView
 import com.example.mebook.ui.components.AnimationStateReactor
-import com.example.mebook.ui.components.ArticleListItem
+import com.example.mebook.ui.components.ArticleList
 import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookSnackbarObserver
+import com.example.mebook.ui.components.ShowMoreItem
 import com.example.mebook.ui.components.rememberAnimationState
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
 import com.example.mebook.ui.presentation.home.HomeAction.FeedItemClick
 import com.example.mebook.ui.presentation.home.HomeAction.FeedShowMore
+import com.example.mebook.ui.util.doOnTrue
 
 @Composable
 fun HomeScreen(
@@ -105,6 +102,7 @@ fun HomeScreen(
 
         FeedList(
             list = uiState.feed,
+            canShowMore = uiState.canShowMoreFeed,
             showMore = {
                 action(FeedShowMore)
             },
@@ -115,6 +113,7 @@ fun HomeScreen(
 
         FeaturedList(
             list = uiState.featured,
+            canShowMore = uiState.canShowMoreFeatured,
             showMore = {
                 action(FeaturedShowMore)
             },
@@ -130,10 +129,11 @@ fun HomeScreen(
 @Composable
 fun FeedList(
     list: List<ArticleItemView>,
+    canShowMore: Boolean,
     showMore: () -> Unit,
     onItemClick: (Int) -> Unit
 ) {
-    if (list.isNotEmpty()) {
+    list.isNotEmpty().doOnTrue {
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
@@ -150,41 +150,15 @@ fun FeedList(
             )
         }
 
-        if (list.size > 5) {
-            for (i in 0 until 5) {
-                Spacer(modifier = Modifier.height(16.dp))
+        ArticleList(list) { id ->
+            onItemClick(id)
+        }
 
-                ArticleListItem(list[i]) {
-                    onItemClick(it)
-                }
-            }
-
+        canShowMore.doOnTrue {
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .requiredHeight(64.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable { showMore() }
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Show more",
-                    style = MaterialTheme.typography.h6.copy(
-                        color = MaterialTheme.colors.secondary,
-                    )
-                )
-            }
-        } else {
-            list.forEach { item ->
-                Spacer(modifier = Modifier.height(16.dp))
-
-                ArticleListItem(item) {
-                    onItemClick(it)
-                }
+            ShowMoreItem {
+                showMore()
             }
         }
     }
@@ -193,10 +167,11 @@ fun FeedList(
 @Composable
 fun FeaturedList(
     list: List<ArticleItemView>,
+    canShowMore: Boolean,
     showMore: () -> Unit,
     onItemClick: (Int) -> Unit
 ) {
-    if (list.isNotEmpty()) {
+    list.isNotEmpty().doOnTrue {
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
@@ -213,43 +188,15 @@ fun FeaturedList(
             )
         }
 
-        if (list.size > 5) {
-            for (i in 0 until 5) {
-                Spacer(modifier = Modifier.height(16.dp))
+        ArticleList(list) { id ->
+            onItemClick(id)
+        }
 
-                ArticleListItem(list[i]) {
-                    onItemClick(it)
-                }
-            }
-
+        canShowMore.doOnTrue {
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .requiredHeight(64.dp)
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable {
-                        showMore()
-                    }
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Show more",
-                    style = MaterialTheme.typography.h6.copy(
-                        color = MaterialTheme.colors.secondary,
-                    )
-                )
-            }
-        } else {
-            list.forEach { item ->
-                Spacer(modifier = Modifier.height(16.dp))
-
-                ArticleListItem(item) {
-                    onItemClick(it)
-                }
+            ShowMoreItem {
+                showMore()
             }
         }
     }
