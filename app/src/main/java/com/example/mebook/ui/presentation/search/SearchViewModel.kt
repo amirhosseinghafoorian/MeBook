@@ -35,6 +35,9 @@ class SearchViewModel @Inject constructor(
                 },
                 suspendJob = {
                     searchJob = it
+                },
+                onLoading = { isLoading ->
+                    updateState { copy(isLoading = isLoading) }
                 }
             )
         } else {

@@ -1,11 +1,18 @@
 package com.example.mebook.ui.presentation.search
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,15 +20,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.R
 import com.example.mebook.model.view.UserItemView
+import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookTextField
 import com.example.mebook.ui.components.UserList
+import com.example.mebook.ui.components.rememberAnimationState
 import com.example.mebook.ui.presentation.search.SearchAction.UpdateTextField
-import com.example.mebook.ui.util.doOnFalse
-import com.example.mebook.ui.util.doOnTrue
 
 @Composable
 fun SearchScreen(
@@ -43,47 +52,85 @@ fun SearchScreen(
     // todo .verticalScroll(rememberScrollState()) needed
     //  column height has a problem
     //  items does not go under bottom bar
+    SearchScreen(uiState) { action ->
+        viewModel.submitAction(action)
+    }
+}
+
+@Composable
+fun SearchScreen(
+    uiState: SearchUiState,
+    action: (SearchAction) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         MeBookTextField(
             placeholder = "Search for Users",
             state = uiState.searchState,
             onValueChange = {
-                viewModel.submitAction(UpdateTextField(it))
+                action(UpdateTextField(it))
             }
         )
 
-        SearchedUsersList(uiState.searchUsers) {
-            // todo navigate to user profile
+        if (uiState.isLoading) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LottieBox(
+                    resourceId = R.raw.loading,
+                    modifier = Modifier.size(128.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+        } else {
+            SearchedUsersList(uiState.searchUsers) {
+                // todo navigate to user profile
+            }
         }
     }
 }
 
 @Composable
-fun SearchedUsersList(
+fun ColumnScope.SearchedUsersList(
     list: List<UserItemView>,
     onItemClick: (String) -> Unit
 ) {
-    list.isNotEmpty().doOnTrue {
+    if (list.isNotEmpty()) {
         Spacer(modifier = Modifier.height(16.dp))
 
         UserList(list) { username ->
             onItemClick(username)
         }
-    }.doOnFalse {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+    } else {
+        Spacer(modifier = Modifier.weight(0.2f))
+
+        Column(
+            modifier = Modifier.weight(0.6f)
         ) {
-            Text(
-                text = "Type username to search user",
-                style = MaterialTheme.typography.subtitle1.copy(
-                    color = MaterialTheme.colors.onSurface
+            AnimatedVisibility(rememberAnimationState(), enter = fadeIn(tween(1000))) {
+                LottieBox(
+                    resourceId = R.raw.empty,
+                    modifier = Modifier.fillMaxSize()
                 )
-            )
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Search Username to find users",
+                    style = MaterialTheme.typography.h6.copy(
+                        color = MaterialTheme.colors.secondary
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
+        Spacer(modifier = Modifier.weight(0.2f))
     }
 }

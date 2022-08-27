@@ -29,6 +29,7 @@ fun HomeHost(
     navController: NavHostController = rememberNavController()
 ) {
     val scaffoldState = rememberScaffoldState()
+    // todo use MeBookScaffold if possible
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
