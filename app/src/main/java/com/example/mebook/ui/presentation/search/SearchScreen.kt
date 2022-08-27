@@ -117,7 +117,7 @@ fun ColumnScope.SearchedUsersList(
         ) {
             AnimatedVisibility(rememberAnimationState(), enter = fadeIn(tween(1000))) {
                 LottieBox(
-                    resourceId = R.raw.empty,
+                    resourceId = R.raw.empty, // todo this is a bad lottie and should be replaced
                     modifier = Modifier.fillMaxSize()
                 )
 
