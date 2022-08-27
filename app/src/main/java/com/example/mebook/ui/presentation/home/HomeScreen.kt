@@ -68,7 +68,20 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     HomeScreen(uiState) { action ->
-        viewModel.submitAction(action)
+        when (action) {
+            is FeedItemClick -> {
+                // todo navigate to article screen
+            }
+            is FeaturedItemClick -> {
+                // todo navigate to article screen
+            }
+            is FeedShowMore -> {
+                // todo navigate to show more screen with param feed
+            }
+            is FeaturedShowMore -> {
+                // todo navigate to show more screen with param featured
+            }
+        }
     }
 }
 

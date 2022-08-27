@@ -31,12 +31,14 @@ class SearchViewModel @Inject constructor(
                     remoteRepository.searchUsers(value)
                 },
                 onSuccess = { result ->
-                    // todo update ui with result
+                    updateState { copy(searchUsers = result) }
                 },
                 suspendJob = {
                     searchJob = it
                 }
             )
+        } else {
+            updateState { copy(searchUsers = listOf()) }
         }
     }
 }

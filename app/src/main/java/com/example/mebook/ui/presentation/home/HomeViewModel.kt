@@ -18,13 +18,7 @@ class HomeViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository,
 ) : BaseViewModel<HomeAction, HomeUiState>(HomeUiState()) {
 
-    override fun onAction(action: HomeAction) {
-        when (action) {
-            FeedShowMore -> updateFeed()
-            FeaturedShowMore -> updateFeatured()
-            else -> throw IllegalArgumentException("not supported action")
-        }
-    }
+    override fun onAction(action: HomeAction) {}
 
     init {
         updateFeatured()
