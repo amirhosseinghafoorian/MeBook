@@ -28,6 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.AppConstants.FULL_ARTICLE_FEATURED_TYPE
+import com.example.mebook.AppConstants.FULL_ARTICLE_FEED_TYPE
 import com.example.mebook.R
 import com.example.mebook.model.view.ArticleItemView
 import com.example.mebook.navigation.MeBookScreens.FullArticlesRoute
@@ -77,10 +79,10 @@ fun HomeScreen(
                 // todo navigate to article screen
             }
             is FeedShowMore -> {
-                // todo navigate to show more screen with param feed
+                navController.navigate(FullArticlesRoute.generateRoute(FULL_ARTICLE_FEED_TYPE))
             }
             is FeaturedShowMore -> {
-                navController.navigate(FullArticlesRoute.generateRoute("featured"))
+                navController.navigate(FullArticlesRoute.generateRoute(FULL_ARTICLE_FEATURED_TYPE))
             }
         }
     }

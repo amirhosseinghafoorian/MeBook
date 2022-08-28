@@ -29,11 +29,13 @@ interface MeBookApi {
     @GET("getUserFeedArticles")
     suspend fun getUserFeedArticles(
         @Query("username") username: String,
+        @Query("limit") limit: Int? = null,
     ): BaseResponse<GetUserFeedArticlesResponse>
 
     @GET("getFeaturedArticles")
     suspend fun getFeaturedArticles(
         @Query("username") username: String,
+        @Query("limit") limit: Int? = null,
     ): BaseResponse<GetFeaturedArticlesResponse>
 
     @GET("searchUser")

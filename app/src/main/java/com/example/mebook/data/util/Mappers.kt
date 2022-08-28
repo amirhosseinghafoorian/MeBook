@@ -17,6 +17,15 @@ fun ArticleEntity.toArticleItemView(): ArticleItemView {
     )
 }
 
+fun GetArticleResponse.toArticleItemView(): ArticleItemView {
+    return ArticleItemView(
+        articleId = articleId,
+        authorUsername = authorUsername,
+        title = title,
+        publishDate = publishDate,
+    )
+}
+
 fun GetUserResponse.toUserItemView(): UserItemView {
     return UserItemView(
         id = id,

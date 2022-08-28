@@ -3,6 +3,7 @@ package com.example.mebook.data.repository
 import com.example.mebook.data.remote.MeBookApi
 import com.example.mebook.data.util.getOrThrow
 import com.example.mebook.data.util.toArticleEntity
+import com.example.mebook.data.util.toArticleItemView
 import com.example.mebook.data.util.toUserItemView
 import com.example.mebook.domain.DataStoreRepository
 import com.example.mebook.domain.LocalRepository
@@ -10,6 +11,7 @@ import com.example.mebook.domain.RemoteRepository
 import com.example.mebook.model.database.FeaturedEntity
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.model.remote.SignInResponse
+import com.example.mebook.model.view.ArticleItemView
 import com.example.mebook.model.view.UserItemView
 import javax.inject.Inject
 
@@ -66,6 +68,34 @@ class RemoteRepositoryImpl @Inject constructor(
             localRepository.clearFeatured()
             localRepository.addFeatured(featuredList)
 
+        } ?: run {
+            throw Exception("Username not found")
+        }
+    }
+
+    override suspend fun getFeed(limit: Int): List<ArticleItemView> {
+        dataStoreRepository.getUsername()?.let { username ->
+            return api
+                .getUserFeedArticles(username, limit)
+                .getOrThrow()
+                .feedArticles
+                .map { response ->
+                    response.toArticleItemView()
+                }
+        } ?: run {
+            throw Exception("Username not found")
+        }
+    }
+
+    override suspend fun getFeatured(limit: Int): List<ArticleItemView> {
+        dataStoreRepository.getUsername()?.let { username ->
+            return api
+                .getFeaturedArticles(username, limit)
+                .getOrThrow()
+                .featuredArticles
+                .map { response ->
+                    response.toArticleItemView()
+                }
         } ?: run {
             throw Exception("Username not found")
         }
