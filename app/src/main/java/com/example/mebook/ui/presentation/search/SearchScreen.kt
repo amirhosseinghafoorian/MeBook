@@ -46,9 +46,6 @@ fun SearchScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // todo .verticalScroll(rememberScrollState()) needed
-    //  column height has a problem
-    //  items does not go under bottom bar
     SearchScreen(uiState) { action ->
         viewModel.submitAction(action)
     }

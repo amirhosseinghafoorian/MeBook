@@ -1,16 +1,21 @@
 package com.example.mebook.navigation
 
-object MeBookScreens {
-    const val SPLASH_ROUTE = "splash"
-    const val AUTHENTICATE_ROUTE = "authenticate"
-    const val LOGIN_ROUTE = "login"
-    const val SIGN_UP_ROUTE = "signUp"
-    const val HOME_ROUTE = "home"
-    const val PROFILE_ROUTE = "profile"
-    const val SEARCH_ROUTE = "search"
-    const val WRITE_ROUTE = "write"
-    const val ARTICLE_ROUTE = "article"
+sealed class MeBookScreens(val route: String) {
+    object SplashRoute : MeBookScreens("splash")
+    object AuthenticateRoute : MeBookScreens("authenticate")
+    object LoginRoute : MeBookScreens("login")
+    object SignUpRoute : MeBookScreens("signUp")
+    object HomeRoute : MeBookScreens("home")
+    object ProfileRoute : MeBookScreens("profile")
+    object SearchRoute : MeBookScreens("search")
+    object WriteRoute : MeBookScreens("write")
+    object ArticleRoute : MeBookScreens("article")
+    object FullArticlesRoute : MeBookScreens("fullArticles?type={type}") {
+        fun generateRoute(type: String): String {
+            return "fullArticles?type=$type"
+        }
+    }
 
-    const val AUTH_NAV_ROUTE = "auth_nav"
-    const val HOME_NAV_ROUTE = "home_nav"
+    object AuthNavRoute : MeBookScreens("auth_nav")
+    object HomeNavRoute : MeBookScreens("home_nav")
 }

@@ -21,9 +21,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mebook.navigation.MeBookScreens.AUTHENTICATE_ROUTE
-import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SPLASH_ROUTE
+import com.example.mebook.navigation.MeBookScreens.AuthenticateRoute
+import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
+import com.example.mebook.navigation.MeBookScreens.SplashRoute
 import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.components.rememberAnimationState
 
@@ -48,14 +48,14 @@ fun SplashScreen(
     LaunchedEffect(animationState.isIdle) {
         if (animationState.isIdle) {
             if (uiState.isLoggedIn == true) {
-                navController.navigate(HOME_NAV_ROUTE) {
-                    popUpTo(SPLASH_ROUTE) {
+                navController.navigate(HomeNavRoute.route) {
+                    popUpTo(SplashRoute.route) {
                         inclusive = true
                     }
                 }
             } else if (uiState.isLoggedIn == false) {
-                navController.navigate(AUTHENTICATE_ROUTE) {
-                    popUpTo(SPLASH_ROUTE) {
+                navController.navigate(AuthenticateRoute.route) {
+                    popUpTo(SplashRoute.route) {
                         inclusive = true
                     }
                 }

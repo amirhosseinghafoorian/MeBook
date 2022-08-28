@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.R
-import com.example.mebook.navigation.MeBookScreens.AUTH_NAV_ROUTE
-import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
-import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.navigation.MeBookScreens.AuthNavRoute
+import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
+import com.example.mebook.navigation.MeBookScreens.LoginRoute
+import com.example.mebook.navigation.MeBookScreens.SignUpRoute
 import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
@@ -59,8 +59,8 @@ fun LoginScreen(
 
     LaunchedEffect(key1 = uiState.isLoginSuccess) {
         if (uiState.isLoginSuccess) {
-            navController.navigate(HOME_NAV_ROUTE) {
-                popUpTo(AUTH_NAV_ROUTE) {
+            navController.navigate(HomeNavRoute.route) {
+                popUpTo(AuthNavRoute.route) {
                     inclusive = true
                 }
             }
@@ -135,8 +135,8 @@ fun LoginScreen(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .clickable {
-                        navController.navigate(SIGN_UP_ROUTE) {
-                            popUpTo(LOGIN_ROUTE) {
+                        navController.navigate(SignUpRoute.route) {
+                            popUpTo(LoginRoute.route) {
                                 inclusive = true
                             }
                         }

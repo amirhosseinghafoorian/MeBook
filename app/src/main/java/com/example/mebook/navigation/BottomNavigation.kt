@@ -10,13 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.mebook.navigation.MeBookScreens.PROFILE_ROUTE
-import com.example.mebook.navigation.MeBookScreens.WRITE_ROUTE
+import com.example.mebook.navigation.MeBookScreens.ProfileRoute
+import com.example.mebook.navigation.MeBookScreens.WriteRoute
 
 @Composable
 fun BottomNavigation(
@@ -60,8 +59,8 @@ fun BottomNavigation(
                 selected = currentRoute == item.screen_route,
                 onClick = {
                     if (
-                        item.screen_route == WRITE_ROUTE ||
-                        item.screen_route == PROFILE_ROUTE
+                        item.screen_route == WriteRoute.route ||
+                        item.screen_route == ProfileRoute.route
                     ) {
                         mainNavController.navigate(item.screen_route) {
 

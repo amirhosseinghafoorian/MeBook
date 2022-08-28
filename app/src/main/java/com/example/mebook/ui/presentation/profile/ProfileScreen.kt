@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.navigation.MeBookScreens
-import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
+import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
 import com.example.mebook.ui.components.ArrowBackBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
@@ -127,8 +127,8 @@ fun ProfileScreen(
                 backgroundColor = MaterialTheme.colors.error,
                 onClick = {
                     viewModel.submitAction(Logout)
-                    navController.navigate(MeBookScreens.AUTH_NAV_ROUTE) {
-                        popUpTo(HOME_NAV_ROUTE) {
+                    navController.navigate(MeBookScreens.AuthNavRoute.route) {
+                        popUpTo(HomeNavRoute.route) {
                             inclusive = true
                         }
                     }

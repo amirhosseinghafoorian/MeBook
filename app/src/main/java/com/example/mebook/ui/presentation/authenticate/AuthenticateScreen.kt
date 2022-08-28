@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.R
-import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.navigation.MeBookScreens.LoginRoute
+import com.example.mebook.navigation.MeBookScreens.SignUpRoute
 import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
@@ -110,7 +110,7 @@ fun AuthenticateScreen(
 
                 MeBookButton(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { action(Navigate(SIGN_UP_ROUTE)) }
+                    onClick = { action(Navigate(SignUpRoute.route)) }
                 ) {
                     Text("sign up")
                 }
@@ -120,7 +120,7 @@ fun AuthenticateScreen(
                 MeBookButton(
                     modifier = Modifier.fillMaxWidth(),
                     backgroundColor = MaterialTheme.colors.secondary,
-                    onClick = { action(Navigate(LOGIN_ROUTE)) }
+                    onClick = { action(Navigate(LoginRoute.route)) }
                 ) {
                     Text("login")
                 }

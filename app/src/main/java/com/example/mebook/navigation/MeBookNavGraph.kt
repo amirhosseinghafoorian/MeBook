@@ -3,14 +3,18 @@ package com.example.mebook.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mebook.navigation.MeBookScreens.ARTICLE_ROUTE
-import com.example.mebook.navigation.MeBookScreens.PROFILE_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SPLASH_ROUTE
-import com.example.mebook.navigation.MeBookScreens.WRITE_ROUTE
+import androidx.navigation.navArgument
+import com.example.mebook.navigation.MeBookScreens.ArticleRoute
+import com.example.mebook.navigation.MeBookScreens.FullArticlesRoute
+import com.example.mebook.navigation.MeBookScreens.ProfileRoute
+import com.example.mebook.navigation.MeBookScreens.SplashRoute
+import com.example.mebook.navigation.MeBookScreens.WriteRoute
 import com.example.mebook.ui.presentation.article.ArticleScreen
+import com.example.mebook.ui.presentation.full_articles.FullArticlesScreen
 import com.example.mebook.ui.presentation.profile.ProfileScreen
 import com.example.mebook.ui.presentation.splash.SplashScreen
 import com.example.mebook.ui.presentation.write.WriteScreen
@@ -22,20 +26,31 @@ fun MeBookNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = SPLASH_ROUTE,
+        startDestination = SplashRoute.route,
         modifier = modifier
     ) {
-        composable(route = SPLASH_ROUTE) {
+        composable(route = SplashRoute.route) {
             SplashScreen(navController)
         }
-        composable(route = PROFILE_ROUTE) {
+        composable(route = ProfileRoute.route) {
             ProfileScreen(navController)
         }
-        composable(route = WRITE_ROUTE) {
+        composable(route = WriteRoute.route) {
             WriteScreen(navController)
         }
-        composable(route = ARTICLE_ROUTE) {
+        composable(route = ArticleRoute.route) {
             ArticleScreen(navController)
+        }
+        composable(
+            route = FullArticlesRoute.route,
+            arguments = listOf(
+                navArgument("type") {
+                    nullable = false
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            FullArticlesScreen(navController)
         }
         homeNavGraph(navController)
         authenticateNavGraph(navController)

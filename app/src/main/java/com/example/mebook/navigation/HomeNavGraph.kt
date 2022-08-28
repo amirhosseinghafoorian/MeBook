@@ -10,14 +10,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mebook.navigation.MeBookScreens.HOME_NAV_ROUTE
-import com.example.mebook.navigation.MeBookScreens.HOME_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SEARCH_ROUTE
+import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
+import com.example.mebook.navigation.MeBookScreens.HomeRoute
+import com.example.mebook.navigation.MeBookScreens.SearchRoute
 import com.example.mebook.ui.presentation.home.HomeScreen
 import com.example.mebook.ui.presentation.search.SearchScreen
 
 fun NavGraphBuilder.homeNavGraph(navController: NavController) {
-    composable(route = HOME_NAV_ROUTE) {
+    composable(route = HomeNavRoute.route) {
         HomeHost(mainController = navController)
     }
 }
@@ -38,13 +38,13 @@ fun HomeHost(
     ) {
         NavHost(
             navController = navController,
-            startDestination = HOME_ROUTE,
+            startDestination = HomeRoute.route,
             modifier = modifier
         ) {
-            composable(route = HOME_ROUTE) {
+            composable(route = HomeRoute.route) {
                 HomeScreen(mainController, scaffoldState)
             }
-            composable(route = SEARCH_ROUTE) {
+            composable(route = SearchRoute.route) {
                 SearchScreen(mainController)
             }
         }

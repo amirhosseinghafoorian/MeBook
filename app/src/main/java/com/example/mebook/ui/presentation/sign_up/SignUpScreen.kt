@@ -26,8 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.R
 import com.example.mebook.navigation.MeBookScreens
-import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
+import com.example.mebook.navigation.MeBookScreens.LoginRoute
+import com.example.mebook.navigation.MeBookScreens.SignUpRoute
 import com.example.mebook.ui.components.ConfirmPasswordTextFieldState
 import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
@@ -66,8 +66,8 @@ fun SignUpScreen(
 
     LaunchedEffect(key1 = uiState.isLoginSuccess) {
         if (uiState.isLoginSuccess) {
-            navController.navigate(MeBookScreens.HOME_NAV_ROUTE) {
-                popUpTo(MeBookScreens.AUTH_NAV_ROUTE) {
+            navController.navigate(MeBookScreens.HomeNavRoute.route) {
+                popUpTo(MeBookScreens.AuthNavRoute.route) {
                     inclusive = true
                 }
             }
@@ -156,8 +156,8 @@ fun SignUpScreen(
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.medium)
                     .clickable {
-                        navController.navigate(LOGIN_ROUTE) {
-                            popUpTo(SIGN_UP_ROUTE) {
+                        navController.navigate(LoginRoute.route) {
+                            popUpTo(SignUpRoute.route) {
                                 inclusive = true
                             }
                         }
