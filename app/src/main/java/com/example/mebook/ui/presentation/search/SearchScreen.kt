@@ -13,14 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -110,7 +107,7 @@ fun ColumnScope.SearchedUsersList(
             onItemClick(username)
         }
     } else {
-        Spacer(modifier = Modifier.weight(0.2f))
+        Spacer(modifier = Modifier.weight(0.1f))
 
         Column(
             modifier = Modifier.weight(0.6f)
@@ -120,17 +117,8 @@ fun ColumnScope.SearchedUsersList(
                     resourceId = R.raw.empty, // todo this is a bad lottie and should be replaced
                     modifier = Modifier.fillMaxSize()
                 )
-
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "Search Username to find users",
-                    style = MaterialTheme.typography.h6.copy(
-                        color = MaterialTheme.colors.secondary
-                    ),
-                    textAlign = TextAlign.Center
-                )
             }
         }
-        Spacer(modifier = Modifier.weight(0.2f))
+        Spacer(modifier = Modifier.weight(0.3f))
     }
 }
