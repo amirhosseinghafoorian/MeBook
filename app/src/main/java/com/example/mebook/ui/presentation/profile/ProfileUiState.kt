@@ -1,3 +1,8 @@
 package com.example.mebook.ui.presentation.profile
 
-class ProfileUiState
+data class ProfileUiState(
+    val isOwnProfile: Boolean? = null,
+    val isFollowingUser: Boolean? = null,
+    val username: String? = null,
+    val logout: Boolean = false
+)

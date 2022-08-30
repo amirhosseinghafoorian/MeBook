@@ -23,7 +23,7 @@ class AuthenticateViewModel @Inject constructor(
         when (action) {
             is CallApi -> testApiCall()
             is CallDatabase -> addUser()
-            else -> throw IllegalArgumentException("unknown action : $action")
+            else -> throw IllegalArgumentException("unSupported action : $action")
         }
     }
 

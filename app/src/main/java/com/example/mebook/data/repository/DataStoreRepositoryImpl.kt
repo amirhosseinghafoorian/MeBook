@@ -27,8 +27,13 @@ class DataStoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUsername(): String? {
-        return dataStore.data.first()[DataStoreKeys.USERNAME]
+    override suspend fun getUsername(): String {
+        dataStore.data.first()[DataStoreKeys.USERNAME]?.let { username ->
+            return username
+        } ?: run {
+            // todo should create a structure to navigate to auth when this happens
+            throw Exception("not Logged In")
+        }
     }
 
 }

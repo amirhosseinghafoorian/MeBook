@@ -22,7 +22,7 @@ class FullArticlesViewModel @Inject constructor(
     override fun onAction(action: FullArticlesAction) {
         when (action) {
             ShowMore -> updateArticlesList()
-            else -> throw IllegalArgumentException("unsupported action")
+            else -> throw IllegalArgumentException("unSupported action : $action")
         }
     }
 

@@ -138,7 +138,7 @@ fun HomeScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(64.dp))
     }
 }
 
@@ -177,6 +177,8 @@ fun FeedList(
                 showMore()
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -215,5 +217,7 @@ fun FeaturedList(
                 showMore()
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }

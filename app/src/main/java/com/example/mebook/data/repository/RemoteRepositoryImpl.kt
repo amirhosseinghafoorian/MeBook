@@ -30,88 +30,64 @@ class RemoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateFeed() {
-        dataStoreRepository.getUsername()?.let { username ->
-
-            val articleList = api
-                .getUserFeedArticles(username)
-                .getOrThrow()
-                .feedArticles
-            val feedList = articleList.map { article ->
-                FeedEntity(article.articleId, article.publishDate)
-            }
-
-            localRepository.addArticles(
-                articleList.toArticleEntity()
-            )
-            localRepository.clearFeed()
-            localRepository.addFeed(feedList)
-
-        } ?: run {
-            throw Exception("Username not found")
+        val articleList = api
+            .getUserFeedArticles(dataStoreRepository.getUsername())
+            .getOrThrow()
+            .feedArticles
+        val feedList = articleList.map { article ->
+            FeedEntity(article.articleId, article.publishDate)
         }
+
+        localRepository.addArticles(
+            articleList.toArticleEntity()
+        )
+        localRepository.clearFeed()
+        localRepository.addFeed(feedList)
     }
 
     override suspend fun updateFeatured() {
-        dataStoreRepository.getUsername()?.let { username ->
-
-            val articleList = api
-                .getFeaturedArticles(username)
-                .getOrThrow()
-                .featuredArticles
-            val featuredList = articleList.map { article ->
-                FeaturedEntity(article.articleId, article.publishDate)
-            }
-
-            localRepository.addArticles(
-                articleList.toArticleEntity()
-            )
-            localRepository.clearFeatured()
-            localRepository.addFeatured(featuredList)
-
-        } ?: run {
-            throw Exception("Username not found")
+        val articleList = api
+            .getFeaturedArticles(dataStoreRepository.getUsername())
+            .getOrThrow()
+            .featuredArticles
+        val featuredList = articleList.map { article ->
+            FeaturedEntity(article.articleId, article.publishDate)
         }
+
+        localRepository.addArticles(
+            articleList.toArticleEntity()
+        )
+        localRepository.clearFeatured()
+        localRepository.addFeatured(featuredList)
     }
 
     override suspend fun getFeed(limit: Int): List<ArticleItemView> {
-        dataStoreRepository.getUsername()?.let { username ->
-            return api
-                .getUserFeedArticles(username, limit)
-                .getOrThrow()
-                .feedArticles
-                .map { response ->
-                    response.toArticleItemView()
-                }
-        } ?: run {
-            throw Exception("Username not found")
-        }
+        return api
+            .getUserFeedArticles(dataStoreRepository.getUsername(), limit)
+            .getOrThrow()
+            .feedArticles
+            .map { response ->
+                response.toArticleItemView()
+            }
     }
 
     override suspend fun getFeatured(limit: Int): List<ArticleItemView> {
-        dataStoreRepository.getUsername()?.let { username ->
-            return api
-                .getFeaturedArticles(username, limit)
-                .getOrThrow()
-                .featuredArticles
-                .map { response ->
-                    response.toArticleItemView()
-                }
-        } ?: run {
-            throw Exception("Username not found")
-        }
+        return api
+            .getFeaturedArticles(dataStoreRepository.getUsername(), limit)
+            .getOrThrow()
+            .featuredArticles
+            .map { response ->
+                response.toArticleItemView()
+            }
     }
 
     override suspend fun searchUsers(text: String): List<UserItemView> {
-        dataStoreRepository.getUsername()?.let { username ->
-            return api
-                .searchUser(username, text)
-                .getOrThrow()
-                .foundUsers
-                .map {
-                    it.toUserItemView()
-                }
-        } ?: run {
-            throw Exception("Username not found")
-        }
+        return api
+            .searchUser(dataStoreRepository.getUsername(), text)
+            .getOrThrow()
+            .foundUsers
+            .map {
+                it.toUserItemView()
+            }
     }
 }

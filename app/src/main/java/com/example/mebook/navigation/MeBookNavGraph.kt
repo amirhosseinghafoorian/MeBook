@@ -32,7 +32,15 @@ fun MeBookNavGraph(
         composable(route = SplashRoute.route) {
             SplashScreen(navController)
         }
-        composable(route = ProfileRoute.route) {
+        composable(
+            route = ProfileRoute.route,
+            arguments = listOf(
+                navArgument("username") {
+                    nullable = true
+                    type = NavType.StringType
+                }
+            )
+        ) {
             ProfileScreen(navController)
         }
         composable(route = WriteRoute.route) {

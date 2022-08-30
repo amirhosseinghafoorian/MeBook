@@ -23,10 +23,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.R
 import com.example.mebook.model.view.UserItemView
+import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookTextField
 import com.example.mebook.ui.components.UserList
 import com.example.mebook.ui.components.rememberAnimationState
+import com.example.mebook.ui.presentation.search.SearchAction.NavigateToUserProfile
 import com.example.mebook.ui.presentation.search.SearchAction.UpdateTextField
 
 @Composable
@@ -47,7 +49,12 @@ fun SearchScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     SearchScreen(uiState) { action ->
-        viewModel.submitAction(action)
+        when (action) {
+            is NavigateToUserProfile -> navController.navigate(
+                MeBookScreens.ProfileRoute.generateRoute(action.username)
+            )
+            else -> viewModel.submitAction(action)
+        }
     }
 }
 
@@ -85,8 +92,8 @@ fun SearchScreen(
 
             Spacer(modifier = Modifier.weight(1f))
         } else {
-            SearchedUsersList(uiState.searchUsers) {
-                // todo navigate to user profile
+            SearchedUsersList(uiState.searchUsers) { username ->
+                action(NavigateToUserProfile(username))
             }
         }
     }
@@ -111,7 +118,7 @@ fun ColumnScope.SearchedUsersList(
         ) {
             AnimatedVisibility(rememberAnimationState(), enter = fadeIn(tween(1000))) {
                 LottieBox(
-                    resourceId = R.raw.empty, // todo this is a bad lottie and should be replaced
+                    resourceId = R.raw.empty,
                     modifier = Modifier.fillMaxSize()
                 )
             }

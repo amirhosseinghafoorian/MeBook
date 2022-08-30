@@ -6,7 +6,12 @@ sealed class MeBookScreens(val route: String) {
     object LoginRoute : MeBookScreens("login")
     object SignUpRoute : MeBookScreens("signUp")
     object HomeRoute : MeBookScreens("home")
-    object ProfileRoute : MeBookScreens("profile")
+    object ProfileRoute : MeBookScreens("profile?username={username}") {
+        fun generateRoute(username: String? = null): String {
+            return "profile?username=$username"
+        }
+    }
+
     object SearchRoute : MeBookScreens("search")
     object WriteRoute : MeBookScreens("write")
     object ArticleRoute : MeBookScreens("article")

@@ -18,6 +18,7 @@ class SearchViewModel @Inject constructor(
     override fun onAction(action: SearchAction) {
         when (action) {
             is UpdateTextField -> searchUser(action.value)
+            else -> throw IllegalArgumentException("unSupported action : $action")
         }
     }
 
