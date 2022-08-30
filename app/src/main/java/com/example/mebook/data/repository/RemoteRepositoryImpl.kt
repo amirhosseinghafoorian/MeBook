@@ -38,10 +38,11 @@ class RemoteRepositoryImpl @Inject constructor(
             FeedEntity(article.articleId, article.publishDate)
         }
 
+        localRepository.clearFeed()
+
         localRepository.addArticles(
             articleList.toArticleEntity()
         )
-        localRepository.clearFeed()
         localRepository.addFeed(feedList)
     }
 
@@ -89,5 +90,26 @@ class RemoteRepositoryImpl @Inject constructor(
             .map {
                 it.toUserItemView()
             }
+    }
+
+    override suspend fun isFollowing(username: String): Boolean {
+        return api.isFollowing(
+            followerUser = dataStoreRepository.getUsername(),
+            followingUser = username
+        ).getOrThrow().isFollowing
+    }
+
+    override suspend fun followUser(username: String) {
+        api.followUser(
+            followerUser = dataStoreRepository.getUsername(),
+            followingUser = username
+        ).getOrThrow()
+    }
+
+    override suspend fun unFollowUser(username: String) {
+        api.unFollowUser(
+            followerUser = dataStoreRepository.getUsername(),
+            followingUser = username
+        ).getOrThrow()
     }
 }

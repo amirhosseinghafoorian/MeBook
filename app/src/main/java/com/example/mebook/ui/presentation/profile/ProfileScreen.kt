@@ -25,6 +25,7 @@ import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.presentation.profile.ProfileAction.Logout
 import com.example.mebook.ui.presentation.profile.ProfileAction.NavigateUp
+import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
 import com.example.mebook.ui.util.doOnFalse
 import com.example.mebook.ui.util.doOnTrue
 
@@ -129,14 +130,16 @@ fun ProfileScreen(
                             MeBookButton(
                                 modifier = Modifier.fillMaxWidth(),
                                 backgroundColor = if (isFollowing)
-                                    MaterialTheme.colors.primary
-                                else MaterialTheme.colors.secondary,
+                                    MaterialTheme.colors.secondary
+                                else MaterialTheme.colors.primary,
                                 onClick = {
-                                    // todo follow/unFollow user action
+                                    action(ToggleFollowState(isFollowing))
                                 }
                             ) {
                                 Text(
-                                    text = "Follow User",
+                                    text = if (isFollowing)
+                                        "Following"
+                                    else "Follow",
                                     style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.surface)
                                 )
                             }

@@ -12,4 +12,7 @@ interface RemoteRepository {
     suspend fun getFeed(limit: Int): List<ArticleItemView>
     suspend fun getFeatured(limit: Int): List<ArticleItemView>
     suspend fun searchUsers(text: String): List<UserItemView>
+    suspend fun isFollowing(username: String): Boolean
+    suspend fun followUser(username: String)
+    suspend fun unFollowUser(username: String)
 }

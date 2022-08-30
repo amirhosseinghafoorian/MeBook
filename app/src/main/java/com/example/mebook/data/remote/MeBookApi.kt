@@ -6,6 +6,7 @@ import com.example.mebook.model.remote.GetUserFeedArticlesResponse
 import com.example.mebook.model.remote.SearchUserResponse
 import com.example.mebook.model.remote.ServerTestModel
 import com.example.mebook.model.remote.SignInResponse
+import com.example.mebook.model.remote.isFollowingResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -43,5 +44,23 @@ interface MeBookApi {
         @Query("username") username: String,
         @Query("searchUsername") searchUsername: String,
     ): BaseResponse<SearchUserResponse>
+
+    @GET("isFollowing")
+    suspend fun isFollowing(
+        @Query("followerUser") followerUser: String,
+        @Query("followingUser") followingUser: String,
+    ): BaseResponse<isFollowingResponse>
+
+    @GET("followUser")
+    suspend fun followUser(
+        @Query("followerUser") followerUser: String,
+        @Query("followingUser") followingUser: String,
+    ): BaseResponse<Unit>
+
+    @GET("unFollowUser")
+    suspend fun unFollowUser(
+        @Query("followerUser") followerUser: String,
+        @Query("followingUser") followingUser: String,
+    ): BaseResponse<Unit>
 
 }
