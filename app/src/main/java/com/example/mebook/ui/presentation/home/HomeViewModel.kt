@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.mebook.AppConstants.shortArticleCount
 import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
-import com.example.mebook.ui.presentation.home.HomeAction.FeaturedShowMore
-import com.example.mebook.ui.presentation.home.HomeAction.FeedShowMore
 import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -33,11 +31,13 @@ class HomeViewModel @Inject constructor(
             },
             onSuccess = { flow ->
                 flow.onEach { list ->
-                    if (list.isNotEmpty() && list.size > shortArticleCount) updateState {
-                        copy(feed = list.subList(0, shortArticleCount), canShowMoreFeed = true)
-                    }
-                    else if (list.isNotEmpty()) updateState {
-                        copy(feed = list.subList(0, list.size))
+                    if (uiState.value.feed != list) {
+                        if (list.isNotEmpty() && list.size > shortArticleCount) updateState {
+                            copy(feed = list.subList(0, shortArticleCount), canShowMoreFeed = true)
+                        }
+                        else if (list.isNotEmpty()) updateState {
+                            copy(feed = list.subList(0, list.size), canShowMoreFeed = false)
+                        }
                     }
                 }.launchIn(viewModelScope)
             },
