@@ -23,6 +23,7 @@ import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
 import com.example.mebook.ui.components.ArrowBackBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.presentation.profile.ProfileAction.ChangePassword
 import com.example.mebook.ui.presentation.profile.ProfileAction.Logout
 import com.example.mebook.ui.presentation.profile.ProfileAction.NavigateUp
 import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
@@ -103,7 +104,7 @@ fun ProfileScreen(
                             modifier = Modifier.fillMaxWidth(),
                             backgroundColor = MaterialTheme.colors.secondary,
                             onClick = {
-                                // todo change password action
+                                action(ChangePassword("87654321"))
                             }
                         ) {
                             Text(

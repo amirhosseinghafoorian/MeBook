@@ -15,4 +15,5 @@ interface RemoteRepository {
     suspend fun isFollowing(username: String): Boolean
     suspend fun followUser(username: String)
     suspend fun unFollowUser(username: String)
+    suspend fun changePassword(newPassword: String)
 }

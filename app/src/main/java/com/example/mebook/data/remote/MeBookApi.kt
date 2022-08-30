@@ -63,4 +63,10 @@ interface MeBookApi {
         @Query("followingUser") followingUser: String,
     ): BaseResponse<Unit>
 
+    @GET("changePassword")
+    suspend fun changePassword(
+        @Query("username") username: String,
+        @Query("password") password: String,
+    ): BaseResponse<Unit>
+
 }

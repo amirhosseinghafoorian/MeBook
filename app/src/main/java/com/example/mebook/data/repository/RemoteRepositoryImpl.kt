@@ -112,4 +112,11 @@ class RemoteRepositoryImpl @Inject constructor(
             followingUser = username
         ).getOrThrow()
     }
+
+    override suspend fun changePassword(newPassword: String) {
+        api.changePassword(
+            username = dataStoreRepository.getUsername(),
+            password = newPassword
+        ).getOrThrow()
+    }
 }

@@ -3,6 +3,7 @@ package com.example.mebook.ui.presentation.profile
 import androidx.lifecycle.SavedStateHandle
 import com.example.mebook.domain.DataStoreRepository
 import com.example.mebook.domain.RemoteRepository
+import com.example.mebook.ui.presentation.profile.ProfileAction.ChangePassword
 import com.example.mebook.ui.presentation.profile.ProfileAction.Logout
 import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
 import com.example.mebook.ui.util.BaseViewModel
@@ -21,6 +22,7 @@ class ProfileViewModel @Inject constructor(
         when (action) {
             Logout -> logoutUser()
             is ToggleFollowState -> toggleFollowUser(action.isFollowing)
+            is ChangePassword -> changePassword(action.newPassword)
             else -> throw IllegalArgumentException("unSupported action : $action")
         }
     }
@@ -75,6 +77,7 @@ class ProfileViewModel @Inject constructor(
                 },
                 onSuccess = {
                     updateState { copy(isFollowingUser = false) }
+                    updateFeed()
                 }
             )
         } else {
@@ -84,10 +87,10 @@ class ProfileViewModel @Inject constructor(
                 },
                 onSuccess = {
                     updateState { copy(isFollowingUser = true) }
+                    updateFeed()
                 }
             )
         }
-        updateFeed()
     }
 
     private fun setUsername(
@@ -95,6 +98,14 @@ class ProfileViewModel @Inject constructor(
         username: String
     ) {
         updateState { copy(isOwnProfile = isOwnProfile, username = username) }
+    }
+
+    private fun changePassword(newPassword: String) {
+        makeSuspendCall(
+            block = {
+                remoteRepository.changePassword(newPassword)
+            }
+        )
     }
 
     private fun updateFeed() {

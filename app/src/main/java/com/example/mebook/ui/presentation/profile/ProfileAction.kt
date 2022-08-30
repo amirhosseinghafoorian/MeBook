@@ -4,4 +4,5 @@ sealed interface ProfileAction {
     object Logout : ProfileAction
     object NavigateUp : ProfileAction
     data class ToggleFollowState(val isFollowing: Boolean) : ProfileAction
+    data class ChangePassword(val newPassword: String) : ProfileAction
 }
