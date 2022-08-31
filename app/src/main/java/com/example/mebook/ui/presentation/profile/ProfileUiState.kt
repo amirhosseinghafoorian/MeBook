@@ -4,5 +4,6 @@ data class ProfileUiState(
     val isOwnProfile: Boolean? = null,
     val isFollowingUser: Boolean? = null,
     val username: String? = null,
-    val logout: Boolean = false
+    val logout: Boolean = false,
+    val isChangePasswordSheetOpen: Boolean = false,
 )

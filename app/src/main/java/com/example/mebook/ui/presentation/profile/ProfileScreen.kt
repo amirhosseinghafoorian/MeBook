@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
@@ -38,6 +39,9 @@ import com.example.mebook.ui.presentation.profile.ProfileAction.NavigateUp
 import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
 import com.example.mebook.ui.util.doOnFalse
 import com.example.mebook.ui.util.doOnTrue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,7 +62,17 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(key1 = uiState.logout) {
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden
+    )
+
+    val scope = rememberCoroutineScope()
+
+    viewModel.passwordSheetFlow.onEach {
+        modalBottomSheetState.hide()
+    }.launchIn(scope)
+
+    LaunchedEffect(uiState.logout) {
         if (uiState.logout) {
             navController.navigate(MeBookScreens.AuthNavRoute.route) {
                 popUpTo(HomeNavRoute.route) {
@@ -68,119 +82,121 @@ fun ProfileScreen(
         }
     }
 
-    val modalBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
-    )
-    val scope = rememberCoroutineScope()
+    ProfileScreen(
+        uiState = uiState,
+        scope = scope,
+        sheetState = modalBottomSheetState
+    ) { action ->
+        when (action) {
+            is NavigateUp -> navController.navigateUp()
+            else -> viewModel.submitAction(action)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ProfileScreen(
+    uiState: ProfileUiState,
+    scope: CoroutineScope,
+    sheetState: ModalBottomSheetState,
+    action: (ProfileAction) -> Unit
+) {
     ModalBottomSheetLayout(
         sheetContent = {
             ChangePasswordBottomSheet { newPassword ->
-                viewModel.submitAction(ChangePassword(newPassword))
+                action(ChangePassword(newPassword))
             }
         },
         sheetBackgroundColor = MaterialTheme.colors.background,
-        sheetState = modalBottomSheetState,
+        sheetState = sheetState,
         sheetShape = MaterialTheme.shapes.medium.copy(
             bottomEnd = CornerSize(0.dp),
             bottomStart = CornerSize(0.dp)
         )
     ) {
-        ProfileScreen(uiState) { action ->
-            when (action) {
-                is NavigateUp -> navController.navigateUp()
-                is ChangePassword -> scope.launch {
-                    modalBottomSheetState.show()
+        MeBookScaffold {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                ArrowBackBox {
+                    action(NavigateUp)
                 }
-                else -> viewModel.submitAction(action)
-            }
-        }
-    }
-}
 
-@Composable
-fun ProfileScreen(
-    uiState: ProfileUiState,
-    action: (ProfileAction) -> Unit
-) {
-    MeBookScaffold {
+                Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            ArrowBackBox {
-                action(NavigateUp)
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            uiState.username?.let { username ->
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = username,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6.copy(
-                        color = MaterialTheme.colors.secondary,
-                        fontWeight = FontWeight.Bold
+                uiState.username?.let { username ->
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = username,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.h6.copy(
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                )
-            }
+                }
 
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
 
-            uiState.isOwnProfile?.let { isOwnProfile ->
-                isOwnProfile
-                    .doOnTrue {
-                        MeBookButton(
-                            modifier = Modifier.fillMaxWidth(),
-                            backgroundColor = MaterialTheme.colors.secondary,
-                            onClick = {
-                                action(ChangePassword("87654321"))
-                            }
-                        ) {
-                            Text(
-                                text = "Change password",
-                                style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.surface)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        MeBookButton(
-                            modifier = Modifier.fillMaxWidth(),
-                            backgroundColor = MaterialTheme.colors.error,
-                            onClick = { action(Logout) }
-                        ) {
-                            Text(
-                                text = "Logout",
-                                style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.surface)
-                            )
-                        }
-                    }
-                    .doOnFalse {
-                        uiState.isFollowingUser?.let { isFollowing ->
+                uiState.isOwnProfile?.let { isOwnProfile ->
+                    isOwnProfile
+                        .doOnTrue {
                             MeBookButton(
                                 modifier = Modifier.fillMaxWidth(),
-                                backgroundColor = if (isFollowing)
-                                    MaterialTheme.colors.secondary
-                                else MaterialTheme.colors.primary,
+                                backgroundColor = MaterialTheme.colors.secondary,
                                 onClick = {
-                                    action(ToggleFollowState(isFollowing))
+                                    scope.launch {
+                                        sheetState.show()
+                                    }
                                 }
                             ) {
                                 Text(
-                                    text = if (isFollowing)
-                                        "Following"
-                                    else "Follow",
+                                    text = "Change password",
+                                    style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.surface)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            MeBookButton(
+                                modifier = Modifier.fillMaxWidth(),
+                                backgroundColor = MaterialTheme.colors.error,
+                                onClick = { action(Logout) }
+                            ) {
+                                Text(
+                                    text = "Logout",
                                     style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.surface)
                                 )
                             }
                         }
-                    }
-            }
+                        .doOnFalse {
+                            uiState.isFollowingUser?.let { isFollowing ->
+                                MeBookButton(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    backgroundColor = if (isFollowing)
+                                        MaterialTheme.colors.secondary
+                                    else MaterialTheme.colors.primary,
+                                    onClick = {
+                                        action(ToggleFollowState(isFollowing))
+                                    }
+                                ) {
+                                    Text(
+                                        text = if (isFollowing)
+                                            "Following"
+                                        else "Follow",
+                                        style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.surface)
+                                    )
+                                }
+                            }
+                        }
+                }
 
-            Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(48.dp))
+            }
         }
     }
 }

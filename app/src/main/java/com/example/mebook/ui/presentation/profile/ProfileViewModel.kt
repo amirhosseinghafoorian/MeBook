@@ -8,6 +8,8 @@ import com.example.mebook.ui.presentation.profile.ProfileAction.Logout
 import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
 import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +19,9 @@ class ProfileViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository
 ) :
     BaseViewModel<ProfileAction, ProfileUiState>(ProfileUiState()) {
+
+    private val _passwordSheetFlow = MutableSharedFlow<Unit>()
+    val passwordSheetFlow = _passwordSheetFlow.asSharedFlow()
 
     override fun onAction(action: ProfileAction) {
         when (action) {
