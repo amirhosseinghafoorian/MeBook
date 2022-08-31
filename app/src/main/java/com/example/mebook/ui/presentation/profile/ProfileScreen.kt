@@ -21,8 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -117,13 +120,23 @@ fun ProfileScreen(
     sheetState: ModalBottomSheetState,
     action: (ProfileAction) -> Unit
 ) {
+    var sheetContentState by remember {
+        mutableStateOf(true)
+    }
+
     ModalBottomSheetLayout(
         sheetContent = {
-            ChangePasswordBottomSheet(
-                isLoading = uiState.isLoading,
-                sheetState = sheetState
-            ) { newPassword ->
-                action(ChangePassword(newPassword))
+            if (sheetContentState) {
+                LogoutBottomSheet {
+                    action(Logout)
+                }
+            } else {
+                ChangePasswordBottomSheet(
+                    isLoading = uiState.isLoading,
+                    sheetState = sheetState
+                ) { newPassword ->
+                    action(ChangePassword(newPassword))
+                }
             }
         },
         sheetBackgroundColor = MaterialTheme.colors.background,
@@ -167,6 +180,7 @@ fun ProfileScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 backgroundColor = MaterialTheme.colors.secondary,
                                 onClick = {
+                                    sheetContentState = false
                                     scope.launch {
                                         sheetState.show()
                                     }
@@ -183,7 +197,12 @@ fun ProfileScreen(
                             MeBookButton(
                                 modifier = Modifier.fillMaxWidth(),
                                 backgroundColor = MaterialTheme.colors.error,
-                                onClick = { action(Logout) }
+                                onClick = {
+                                    sheetContentState = true
+                                    scope.launch {
+                                        sheetState.show()
+                                    }
+                                }
                             ) {
                                 Text(
                                     text = "Logout",
@@ -263,6 +282,40 @@ fun ChangePasswordBottomSheet(
             } else {
                 Text("Change password")
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun LogoutBottomSheet(
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Do you want to logout ?",
+            style = MaterialTheme.typography.subtitle1,
+            color = MaterialTheme.colors.onBackground,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MeBookButton(
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.error,
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                onClick()
+            }
+        ) {
+            Text("Confirm")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
