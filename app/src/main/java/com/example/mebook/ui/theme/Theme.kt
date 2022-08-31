@@ -19,7 +19,7 @@ private val LightColorPalette = lightColors(
     primary = GREEN,
     primaryVariant = Purple700,
     secondary = DARK_BLUE,
-    background = GRAY.copy(alpha = 0.2f),
+    background = GRAY,
     onBackground = BLACK,
     surface = WHITE,
     onSurface = BLACK,

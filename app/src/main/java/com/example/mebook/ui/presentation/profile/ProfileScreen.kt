@@ -6,12 +6,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,12 +30,15 @@ import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
 import com.example.mebook.ui.components.ArrowBackBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.components.MeBookTextField
+import com.example.mebook.ui.components.text_field_util.PasswordTextFieldState
 import com.example.mebook.ui.presentation.profile.ProfileAction.ChangePassword
 import com.example.mebook.ui.presentation.profile.ProfileAction.Logout
 import com.example.mebook.ui.presentation.profile.ProfileAction.NavigateUp
 import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
 import com.example.mebook.ui.util.doOnFalse
 import com.example.mebook.ui.util.doOnTrue
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -40,6 +50,7 @@ fun ProfileScreen(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -57,10 +68,31 @@ fun ProfileScreen(
         }
     }
 
-    ProfileScreen(uiState) { action ->
-        when (action) {
-            is NavigateUp -> navController.navigateUp()
-            else -> viewModel.submitAction(action)
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden
+    )
+    val scope = rememberCoroutineScope()
+    ModalBottomSheetLayout(
+        sheetContent = {
+            ChangePasswordBottomSheet { newPassword ->
+                viewModel.submitAction(ChangePassword(newPassword))
+            }
+        },
+        sheetBackgroundColor = MaterialTheme.colors.background,
+        sheetState = modalBottomSheetState,
+        sheetShape = MaterialTheme.shapes.medium.copy(
+            bottomEnd = CornerSize(0.dp),
+            bottomStart = CornerSize(0.dp)
+        )
+    ) {
+        ProfileScreen(uiState) { action ->
+            when (action) {
+                is NavigateUp -> navController.navigateUp()
+                is ChangePassword -> scope.launch {
+                    modalBottomSheetState.show()
+                }
+                else -> viewModel.submitAction(action)
+            }
         }
     }
 }
@@ -150,5 +182,37 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
         }
+    }
+}
+
+@Composable
+fun ChangePasswordBottomSheet(
+    onClick: (String) -> Unit
+) {
+    val passwordState = remember { PasswordTextFieldState() }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MeBookTextField(
+            state = passwordState,
+            onValueChange = {
+                passwordState.onChanged(it)
+            },
+            placeholder = "Enter your new password"
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MeBookButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                if (passwordState.validate()) onClick(passwordState.text)
+            }
+        ) {
+            Text("Change password")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
