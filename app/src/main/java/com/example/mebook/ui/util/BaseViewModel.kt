@@ -96,4 +96,6 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
         }
     }
 
+    // todo effect should be added
+    //  snackbarObserver LaunchedEffect should be updated
 }

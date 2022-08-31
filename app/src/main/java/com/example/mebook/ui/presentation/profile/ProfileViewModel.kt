@@ -1,6 +1,7 @@
 package com.example.mebook.ui.presentation.profile
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.example.mebook.domain.DataStoreRepository
 import com.example.mebook.domain.RemoteRepository
 import com.example.mebook.ui.presentation.profile.ProfileAction.ChangePassword
@@ -10,6 +11,7 @@ import com.example.mebook.ui.util.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -109,6 +111,20 @@ class ProfileViewModel @Inject constructor(
         makeSuspendCall(
             block = {
                 remoteRepository.changePassword(newPassword)
+            },
+            onSuccess = {
+                viewModelScope.launch {
+                    _passwordSheetFlow.emit(Unit)
+                }
+            },
+            onError = { error ->
+                showSnackbar(error.message.toString())
+                viewModelScope.launch {
+                    _passwordSheetFlow.emit(Unit)
+                }
+            },
+            onLoading = { isLoading ->
+                updateState { copy(isLoading = isLoading) }
             }
         )
     }

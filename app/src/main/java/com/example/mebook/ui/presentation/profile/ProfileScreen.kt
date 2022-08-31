@@ -6,14 +6,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,16 +24,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.R
 import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
 import com.example.mebook.ui.components.ArrowBackBox
+import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.components.MeBookSnackbarObserver
 import com.example.mebook.ui.components.MeBookTextField
 import com.example.mebook.ui.components.text_field_util.PasswordTextFieldState
 import com.example.mebook.ui.presentation.profile.ProfileAction.ChangePassword
@@ -67,6 +74,12 @@ fun ProfileScreen(
     )
 
     val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+
+    MeBookSnackbarObserver(
+        scaffoldState = scaffoldState,
+        snackbarFlow = viewModel.snackbarFlow
+    )
 
     viewModel.passwordSheetFlow.onEach {
         modalBottomSheetState.hide()
@@ -85,6 +98,7 @@ fun ProfileScreen(
     ProfileScreen(
         uiState = uiState,
         scope = scope,
+        scaffoldState = scaffoldState,
         sheetState = modalBottomSheetState
     ) { action ->
         when (action) {
@@ -99,12 +113,16 @@ fun ProfileScreen(
 fun ProfileScreen(
     uiState: ProfileUiState,
     scope: CoroutineScope,
+    scaffoldState: ScaffoldState,
     sheetState: ModalBottomSheetState,
     action: (ProfileAction) -> Unit
 ) {
     ModalBottomSheetLayout(
         sheetContent = {
-            ChangePasswordBottomSheet { newPassword ->
+            ChangePasswordBottomSheet(
+                isLoading = uiState.isLoading,
+                sheetState = sheetState
+            ) { newPassword ->
                 action(ChangePassword(newPassword))
             }
         },
@@ -115,7 +133,7 @@ fun ProfileScreen(
             bottomStart = CornerSize(0.dp)
         )
     ) {
-        MeBookScaffold {
+        MeBookScaffold(scaffoldState = scaffoldState) {
 
             Column(
                 modifier = Modifier
@@ -201,11 +219,20 @@ fun ProfileScreen(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ChangePasswordBottomSheet(
+    isLoading: Boolean,
+    sheetState: ModalBottomSheetState,
     onClick: (String) -> Unit
 ) {
     val passwordState = remember { PasswordTextFieldState() }
+
+    LaunchedEffect(sheetState.isVisible) {
+        if (!sheetState.isVisible) {
+            passwordState.onChanged("")
+        }
+    }
 
     Column(modifier = Modifier.padding(16.dp)) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -221,12 +248,21 @@ fun ChangePasswordBottomSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         MeBookButton(
+            enabled = !isLoading,
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (passwordState.validate()) onClick(passwordState.text)
             }
         ) {
-            Text("Change password")
+            if (isLoading) {
+                LottieBox(
+                    resourceId = R.raw.loading,
+                    modifier = Modifier.size(128.dp),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Text("Change password")
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
