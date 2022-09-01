@@ -1,29 +1,34 @@
 package com.example.mebook.ui.presentation.authenticate
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mebook.ui.components.MeBookSnackbarHost
-import com.example.mebook.ui.components.MeBookSnackbarObserver
-import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallApi
-import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.CallDatabase
+import com.example.mebook.R
+import com.example.mebook.navigation.MeBookScreens.LoginRoute
+import com.example.mebook.navigation.MeBookScreens.SignUpRoute
+import com.example.mebook.ui.components.LottieBox
+import com.example.mebook.ui.components.MeBookButton
+import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.components.rememberAnimationState
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.Navigate
 import com.example.mebook.ui.presentation.authenticate.AuthenticateAction.NavigateUp
 import com.example.mebook.ui.util.doOnFalse
@@ -44,68 +49,81 @@ fun AuthenticateScreen(
     navController: NavController,
     viewModel: AuthenticateViewModel
 ) {
-    val scaffoldState = rememberScaffoldState()
-
-    MeBookSnackbarObserver(
-        scaffoldState = scaffoldState,
-        snackbarFlow = viewModel.snackbarFlow
-    )
 
     val uiState by viewModel.uiState.collectAsState()
 
-    AuthenticateScreen(
-        isLoading = viewModel.isLoading,
-        scaffoldState = scaffoldState,
-        uiState = uiState
-    ) { action ->
-        when (action) {
-            NavigateUp -> navController.navigateUp()
-            is Navigate -> navController.navigate(action.route)
-            else -> viewModel.submitAction(action)
+    MeBookScaffold(
+        snackbarFlow = viewModel.snackbarFlow
+    ) {
+        AuthenticateScreen(uiState) { action ->
+            when (action) {
+                NavigateUp -> navController.navigateUp()
+                is Navigate -> navController.navigate(action.route)
+                else -> viewModel.submitAction(action)
+            }
         }
     }
-
 }
 
 @Composable
 fun AuthenticateScreen(
-    isLoading: Boolean,
-    scaffoldState: ScaffoldState,
     uiState: AuthenticateUiState,
     action: (AuthenticateAction) -> Unit
 ) {
-    Scaffold(
-        scaffoldState = scaffoldState,
-        snackbarHost = { MeBookSnackbarHost(hostState = it) }
-    ) { paddingValues ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            text = "Get Started\nSign into your MeBook Account",
+            style = MaterialTheme.typography.h6.copy(
+                color = MaterialTheme.colors.secondary
+            ),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            Text(uiState.name)
-
-            Spacer(modifier = Modifier.height(64.dp))
-
-            isLoading
-                .doOnTrue { CircularProgressIndicator() }
-                .doOnFalse {
-                    Button(onClick = {
-                        action(CallApi)
-                    }) {
-                        Text("Make Api Call")
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = {
-                        action(CallDatabase)
-                    }) {
-                        Text("Make Database Call")
-                    }
-                }
+            AnimatedVisibility(rememberAnimationState(), enter = fadeIn(tween(2000))) {
+                LottieBox(
+                    resourceId = R.raw.book_lover_lottie,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        uiState.isLoading
+            .doOnTrue { CircularProgressIndicator() }
+            .doOnFalse {
+
+                MeBookButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { action(Navigate(SignUpRoute.route)) }
+                ) {
+                    Text("sign up")
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                MeBookButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    onClick = { action(Navigate(LoginRoute.route)) }
+                ) {
+                    Text("login")
+                }
+            }
     }
 }

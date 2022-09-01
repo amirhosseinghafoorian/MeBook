@@ -1,31 +1,26 @@
 package com.example.mebook.ui.util
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.ui.util.Constants.INTERNET_ERROR
-import com.example.mebook.ui.util.Constants.UNKOWN_ERROR
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
 abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
 
-    var isLoading by mutableStateOf(false)
-        private set
-
     private val _snackbarFlow = MutableSharedFlow<String>()
     val snackbarFlow = _snackbarFlow.asSharedFlow()
 
-    protected val state = MutableStateFlow(initialState)
+    private val state = MutableStateFlow(initialState)
     val uiState = state
         .stateIn(
             viewModelScope,
@@ -63,11 +58,13 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
         block: suspend () -> R,
         onSuccess: ((R) -> Unit)? = null,
         onError: ((Exception) -> Unit)? = null,
+        onLoading: ((Boolean) -> Unit)? = null,
+        suspendJob: ((Job) -> Unit)? = null,
         showSnackbarOnError: Boolean = true
     ) {
         viewModelScope.launch {
 
-            isLoading = true
+            onLoading?.invoke(true)
             makeSuspendCall(block).apply {
                 try {
                     val result = getOrThrow()
@@ -77,14 +74,28 @@ abstract class BaseViewModel<A, S> constructor(initialState: S) : ViewModel() {
                     onError?.invoke(Exception(INTERNET_ERROR, e.cause))
                     e.printStackTrace()
                 } catch (e: Exception) {
-                    if (showSnackbarOnError) showSnackbar(UNKOWN_ERROR)
+                    if (showSnackbarOnError) {
+                        e.message?.let { errorMessage ->
+                            showSnackbar(errorMessage)
+                        }
+                    }
                     onError?.invoke(e)
                     e.printStackTrace()
                 } finally {
-                    isLoading = false
+                    onLoading?.invoke(false)
                 }
             }
+        }.apply {
+            suspendJob?.invoke(this)
         }
     }
 
+    protected fun updateState(newState: S.(S) -> S) {
+        state.apply {
+            update { value.newState(it) }
+        }
+    }
+
+    // todo effect should be added
+    //  snackbarObserver LaunchedEffect should be updated
 }

@@ -6,7 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import com.example.mebook.ui.theme.MeBookTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,7 +20,9 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            passing this to MeBookScreen may help with additional configuration for large screens
 //            val widthSizeClass = calculateWindowSizeClass(this).widthSizeClass
-            MeBookScreen()
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                MeBookScreen()
+            }
         }
     }
 }

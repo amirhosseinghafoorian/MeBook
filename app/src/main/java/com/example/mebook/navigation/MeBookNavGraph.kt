@@ -3,15 +3,21 @@ package com.example.mebook.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mebook.navigation.MeBookScreens.AUTHENTICATE_ROUTE
-import com.example.mebook.navigation.MeBookScreens.LOGIN_ROUTE
-import com.example.mebook.navigation.MeBookScreens.SIGN_UP_ROUTE
-import com.example.mebook.ui.presentation.login.LoginScreen
-import com.example.mebook.ui.presentation.sign_up.SignUpScreen
-import com.example.mebook.ui.presentation.authenticate.AuthenticateScreen
+import androidx.navigation.navArgument
+import com.example.mebook.navigation.MeBookScreens.ArticleRoute
+import com.example.mebook.navigation.MeBookScreens.FullArticlesRoute
+import com.example.mebook.navigation.MeBookScreens.ProfileRoute
+import com.example.mebook.navigation.MeBookScreens.SplashRoute
+import com.example.mebook.navigation.MeBookScreens.WriteRoute
+import com.example.mebook.ui.presentation.article.ArticleScreen
+import com.example.mebook.ui.presentation.full_articles.FullArticlesScreen
+import com.example.mebook.ui.presentation.profile.ProfileScreen
+import com.example.mebook.ui.presentation.splash.SplashScreen
+import com.example.mebook.ui.presentation.write.WriteScreen
 
 @Composable
 fun MeBookNavGraph(
@@ -20,17 +26,49 @@ fun MeBookNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AUTHENTICATE_ROUTE,
+        startDestination = SplashRoute.route,
         modifier = modifier
     ) {
-        composable(route = AUTHENTICATE_ROUTE) {
-            AuthenticateScreen(navController)
+        composable(route = SplashRoute.route) {
+            SplashScreen(navController)
         }
-        composable(route = LOGIN_ROUTE) {
-            LoginScreen(navController)
+        composable(
+            route = ProfileRoute.route,
+            arguments = listOf(
+                navArgument("username") {
+                    nullable = true
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            ProfileScreen(navController)
         }
-        composable(route = SIGN_UP_ROUTE) {
-            SignUpScreen(navController)
+        composable(route = WriteRoute.route) {
+            WriteScreen(navController)
         }
+        composable(
+            route = ArticleRoute.route,
+            arguments = listOf(
+                navArgument("articleId") {
+                    nullable = false
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            ArticleScreen(navController)
+        }
+        composable(
+            route = FullArticlesRoute.route,
+            arguments = listOf(
+                navArgument("type") {
+                    nullable = false
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            FullArticlesScreen(navController)
+        }
+        homeNavGraph(navController)
+        authenticateNavGraph(navController)
     }
 }
