@@ -1,6 +1,5 @@
 package com.example.mebook.navigation
 
-import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
 import com.example.mebook.navigation.MeBookScreens.HomeRoute
 import com.example.mebook.navigation.MeBookScreens.SearchRoute
+import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.presentation.home.HomeScreen
 import com.example.mebook.ui.presentation.search.SearchScreen
 
@@ -29,8 +29,8 @@ fun HomeHost(
     navController: NavHostController = rememberNavController()
 ) {
     val scaffoldState = rememberScaffoldState()
-    // todo use MeBookScaffold if possible
-    Scaffold(
+
+    MeBookScaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
             BottomNavigation(navController, mainController)
