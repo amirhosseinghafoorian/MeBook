@@ -87,4 +87,9 @@ interface MeBookApi {
         @Query("articleId") articleId: Int,
     ): BaseResponse<GetSingleArticleResponse>
 
+    @GET("deleteArticle")
+    suspend fun deleteArticle(
+        @Query("articleId") articleId: Int,
+    ): BaseResponse<Unit>
+
 }

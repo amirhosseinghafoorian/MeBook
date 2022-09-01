@@ -60,7 +60,10 @@ class ArticleViewModel @Inject constructor(
         uiState.value.article?.let { article ->
             makeSuspendCall(
                 block = {
-                    // todo delete article with articleId
+                    remoteRepository.deleteArticle(article.articleId)
+                },
+                onSuccess = {
+                    updateState { copy(isDeleted = true) }
                 }
             )
         }

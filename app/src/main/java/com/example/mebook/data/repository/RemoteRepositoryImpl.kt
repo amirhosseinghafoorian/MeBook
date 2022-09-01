@@ -102,6 +102,10 @@ class RemoteRepositoryImpl @Inject constructor(
             .toFullArticleView()
     }
 
+    override suspend fun deleteArticle(articleId: Int) {
+        api.deleteArticle(articleId).getOrThrow()
+    }
+
     override suspend fun searchUsers(text: String): List<UserItemView> {
         return api
             .searchUser(dataStoreRepository.getUsername(), text)
