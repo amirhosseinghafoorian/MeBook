@@ -12,6 +12,7 @@ interface RemoteRepository {
     suspend fun updateFeatured()
     suspend fun getFeed(limit: Int): List<ArticleItemView>
     suspend fun getFeatured(limit: Int): List<ArticleItemView>
+    suspend fun getUserArticles(username: String): List<ArticleItemView>
 
     suspend fun searchUsers(text: String): List<UserItemView>
 

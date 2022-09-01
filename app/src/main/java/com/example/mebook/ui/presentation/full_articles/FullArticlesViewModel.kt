@@ -66,9 +66,18 @@ class FullArticlesViewModel @Inject constructor(
         updateState { copy(articlesLimit = currentLimit + 10) }
     }
 
+    // todo articles limit should be added
+    //  or remove show more for user articles
     private fun getUserArticles() {
-        savedStateHandle.get<String>("username")
-        // todo call api
-        //  update ui with result
+        savedStateHandle.get<String>("username")?.let { username ->
+            makeSuspendCall(
+                block = {
+                    remoteRepository.getUserArticles(username)
+                }, onSuccess = { list ->
+                    updateState { copy(articles = list) }
+                    updateLimit()
+                }
+            )
+        }
     }
 }

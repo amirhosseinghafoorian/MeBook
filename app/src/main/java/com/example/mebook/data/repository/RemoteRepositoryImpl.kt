@@ -82,6 +82,16 @@ class RemoteRepositoryImpl @Inject constructor(
             }
     }
 
+    override suspend fun getUserArticles(username: String): List<ArticleItemView> {
+        return api
+            .getUserArticles(username)
+            .getOrThrow()
+            .userArticles
+            .map { response ->
+                response.toArticleItemView()
+            }
+    }
+
     override suspend fun searchUsers(text: String): List<UserItemView> {
         return api
             .searchUser(dataStoreRepository.getUsername(), text)
