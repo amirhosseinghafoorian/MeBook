@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShowMoreItem(
+    text: String = "Show more",
     onClick: () -> Unit
 ) {
     Column(
@@ -29,7 +30,7 @@ fun ShowMoreItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Show more",
+            text = text,
             style = MaterialTheme.typography.h6.copy(
                 color = MaterialTheme.colors.secondary,
             )
