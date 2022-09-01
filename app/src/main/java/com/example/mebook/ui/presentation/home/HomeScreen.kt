@@ -73,16 +73,12 @@ fun HomeScreen(
 
     HomeScreen(uiState) { action ->
         when (action) {
-            is FeedItemClick -> {
-                navController.navigate(
-                    MeBookScreens.ArticleRoute.generateRoute(action.id)
-                )
-            }
-            is FeaturedItemClick -> {
-                navController.navigate(
-                    MeBookScreens.ArticleRoute.generateRoute(action.id)
-                )
-            }
+            is FeedItemClick -> navController.navigate(
+                MeBookScreens.ArticleRoute.generateRoute(action.id)
+            )
+            is FeaturedItemClick -> navController.navigate(
+                MeBookScreens.ArticleRoute.generateRoute(action.id)
+            )
             is FeedShowMore -> {
                 navController.navigate(FullArticlesRoute.generateRoute(FULL_ARTICLE_FEED_TYPE))
             }

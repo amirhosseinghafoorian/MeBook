@@ -6,6 +6,7 @@ import com.example.mebook.model.database.FeedArticle
 import com.example.mebook.model.remote.GetArticleResponse
 import com.example.mebook.model.remote.GetUserResponse
 import com.example.mebook.model.view.ArticleItemView
+import com.example.mebook.model.view.FullArticleView
 import com.example.mebook.model.view.UserItemView
 
 fun ArticleEntity.toArticleItemView(): ArticleItemView {
@@ -31,6 +32,16 @@ fun GetUserResponse.toUserItemView(): UserItemView {
         id = id,
         joinDate = joinDate,
         username = username
+    )
+}
+
+fun GetArticleResponse.toFullArticleView(): FullArticleView {
+    return FullArticleView(
+        articleId = articleId,
+        authorUsername = authorUsername,
+        body = body,
+        publishDate = publishDate,
+        title = title
     )
 }
 

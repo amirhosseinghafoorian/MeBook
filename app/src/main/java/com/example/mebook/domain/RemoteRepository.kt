@@ -2,6 +2,7 @@ package com.example.mebook.domain
 
 import com.example.mebook.model.remote.SignInResponse
 import com.example.mebook.model.view.ArticleItemView
+import com.example.mebook.model.view.FullArticleView
 import com.example.mebook.model.view.UserItemView
 
 interface RemoteRepository {
@@ -13,6 +14,7 @@ interface RemoteRepository {
     suspend fun getFeed(limit: Int): List<ArticleItemView>
     suspend fun getFeatured(limit: Int): List<ArticleItemView>
     suspend fun getUserArticles(username: String): List<ArticleItemView>
+    suspend fun getArticle(articleId: Int): FullArticleView
 
     suspend fun searchUsers(text: String): List<UserItemView>
 

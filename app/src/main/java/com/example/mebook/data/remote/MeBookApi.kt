@@ -2,6 +2,7 @@ package com.example.mebook.data.remote
 
 import com.example.mebook.model.remote.BaseResponse
 import com.example.mebook.model.remote.GetFeaturedArticlesResponse
+import com.example.mebook.model.remote.GetSingleArticleResponse
 import com.example.mebook.model.remote.GetUserArticlesResponse
 import com.example.mebook.model.remote.GetUserFeedArticlesResponse
 import com.example.mebook.model.remote.GetUserProfileResponse
@@ -80,5 +81,10 @@ interface MeBookApi {
     suspend fun getUserArticles(
         @Query("username") username: String,
     ): BaseResponse<GetUserArticlesResponse>
+
+    @GET("getSingleArticle")
+    suspend fun getSingleArticle(
+        @Query("articleId") articleId: Int,
+    ): BaseResponse<GetSingleArticleResponse>
 
 }

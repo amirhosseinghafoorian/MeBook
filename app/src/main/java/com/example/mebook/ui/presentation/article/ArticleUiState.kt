@@ -4,5 +4,7 @@ import com.example.mebook.model.view.FullArticleView
 
 data class ArticleUiState(
     val isOwnArticle: Boolean? = null,
-    val articleDetail: FullArticleView? = null,
+    val isLoadingArticle: Boolean = false,
+    val isDeleted: Boolean = false,
+    val article: FullArticleView? = null,
 )

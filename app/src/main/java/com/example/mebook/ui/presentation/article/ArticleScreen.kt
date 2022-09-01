@@ -1,6 +1,7 @@
 package com.example.mebook.ui.presentation.article
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -17,18 +19,28 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.R
+import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.ui.components.ArrowBackBox
+import com.example.mebook.ui.components.LottieBox
+import com.example.mebook.ui.components.MeBookButton
 import com.example.mebook.ui.components.MeBookScaffold
+import com.example.mebook.ui.presentation.article.ArticleAction.DeleteArticle
+import com.example.mebook.ui.presentation.article.ArticleAction.NavigateToUserProfile
 import com.example.mebook.ui.presentation.article.ArticleAction.NavigateUp
+import com.example.mebook.ui.util.doOnFalse
+import com.example.mebook.ui.util.doOnTrue
 
 @Composable
 fun ArticleScreen(
@@ -47,9 +59,19 @@ fun ArticleScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(uiState.isDeleted) {
+        if (uiState.isDeleted) {
+            navController.navigateUp()
+        }
+    }
+
     ArticleScreen(uiState) { action ->
         when (action) {
             NavigateUp -> navController.navigateUp()
+            is NavigateToUserProfile -> navController.navigate(
+                MeBookScreens.ProfileRoute.generateRoute(action.username)
+            )
+            else -> viewModel.submitAction(action)
         }
     }
 }
@@ -63,7 +85,7 @@ fun ArticleScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             ArrowBackBox {
@@ -72,17 +94,55 @@ fun ArticleScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            AuthorSection {
+            uiState.isLoadingArticle.doOnTrue {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LottieBox(
+                        resourceId = R.raw.loading,
+                        modifier = Modifier.size(128.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }.doOnFalse {
+                uiState.article?.let { article ->
+                    AuthorSection(article.authorUsername, article.publishDate) {
+                        action(NavigateToUserProfile(article.authorUsername))
+                    }
 
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    TitleSection(article.title)
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    BodySection(article.body)
+                }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            uiState.isOwnArticle?.let { isOwn ->
+                isOwn.doOnTrue {
+                    Spacer(modifier = Modifier.height(64.dp))
 
-            TitleSection()
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            BodySection()
+                    MeBookButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 32.dp),
+                        shape = MaterialTheme.shapes.large,
+                        backgroundColor = MaterialTheme.colors.error,
+                        onClick = {
+                            action(DeleteArticle)
+                        }
+                    ) {
+                        Text(
+                            text = "Delete Article",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.surface
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -91,6 +151,8 @@ fun ArticleScreen(
 
 @Composable
 fun AuthorSection(
+    author: String,
+    publishDate: Long,
     onClick: () -> Unit
 ) {
     Row(
@@ -115,22 +177,25 @@ fun AuthorSection(
                     )
                 )
                 .background(MaterialTheme.colors.surface)
+                .clickable { onClick() }
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("AmirHossein")
+            Text(author)
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text("9/1/2022")
+            Text(publishDate.toString())
         }
     }
 }
 
 @Composable
-fun TitleSection() {
+fun TitleSection(
+    title: String
+) {
     Text(
-        text = "This is a title",
+        text = title,
         style = MaterialTheme.typography.h4,
         color = MaterialTheme.colors.onBackground,
         fontWeight = FontWeight.Bold
@@ -138,9 +203,11 @@ fun TitleSection() {
 }
 
 @Composable
-fun BodySection() {
+fun BodySection(
+    body: String
+) {
     Text(
-        text = "This is a Body",
+        text = body,
         style = MaterialTheme.typography.h6,
         color = MaterialTheme.colors.onBackground
     )

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.ui.components.ArrowBackBox
 import com.example.mebook.ui.components.ArticleList
 import com.example.mebook.ui.components.MeBookScaffold
@@ -41,9 +42,9 @@ fun FullArticlesScreen(
 
     FullArticlesScreen(uiState) { action ->
         when (action) {
-            is OnItemClick -> {
-                // todo navigate to article screen
-            }
+            is OnItemClick -> navController.navigate(
+                MeBookScreens.ArticleRoute.generateRoute(action.id)
+            )
             is NavigateUp -> navController.navigateUp()
             else -> viewModel.submitAction(action)
         }

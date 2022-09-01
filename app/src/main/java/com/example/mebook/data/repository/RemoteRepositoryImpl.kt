@@ -4,6 +4,7 @@ import com.example.mebook.data.remote.MeBookApi
 import com.example.mebook.data.util.getOrThrow
 import com.example.mebook.data.util.toArticleEntity
 import com.example.mebook.data.util.toArticleItemView
+import com.example.mebook.data.util.toFullArticleView
 import com.example.mebook.data.util.toUserItemView
 import com.example.mebook.domain.DataStoreRepository
 import com.example.mebook.domain.LocalRepository
@@ -12,6 +13,7 @@ import com.example.mebook.model.database.FeaturedEntity
 import com.example.mebook.model.database.FeedEntity
 import com.example.mebook.model.remote.SignInResponse
 import com.example.mebook.model.view.ArticleItemView
+import com.example.mebook.model.view.FullArticleView
 import com.example.mebook.model.view.UserItemView
 import javax.inject.Inject
 
@@ -90,6 +92,14 @@ class RemoteRepositoryImpl @Inject constructor(
             .map { response ->
                 response.toArticleItemView()
             }
+    }
+
+    override suspend fun getArticle(articleId: Int): FullArticleView {
+        return api
+            .getSingleArticle(articleId)
+            .getOrThrow()
+            .article
+            .toFullArticleView()
     }
 
     override suspend fun searchUsers(text: String): List<UserItemView> {
