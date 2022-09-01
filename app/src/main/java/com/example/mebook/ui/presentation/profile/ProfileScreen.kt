@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -258,26 +259,33 @@ fun ProfileScreen(
                         }
                     }
                 }.doOnTrue {
-                    LottieBox(
-                        resourceId = R.raw.loading,
-                        modifier = Modifier.size(128.dp),
-                        contentScale = ContentScale.Crop
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = CenterHorizontally
+                    ) {
+                        LottieBox(
+                            resourceId = R.raw.loading,
+                            modifier = Modifier.size(128.dp),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
 
-                (uiState.userProfile?.first != 0).doOnTrue {
-                    Spacer(modifier = Modifier.height(32.dp))
+                uiState.userProfile?.let { profile ->
+                    (profile.first > 0).doOnTrue {
+                        Spacer(modifier = Modifier.height(32.dp))
 
-                    ShowMoreItem("Tap to see articles") {
-                        uiState.username?.let { username ->
-                            action(
-                                Navigate(
-                                    MeBookScreens.FullArticlesRoute.generateRoute(
-                                        type = FULL_ARTICLE_USER_TYPE,
-                                        username = username
+                        ShowMoreItem("Tap to see articles") {
+                            uiState.username?.let { username ->
+                                action(
+                                    Navigate(
+                                        MeBookScreens.FullArticlesRoute.generateRoute(
+                                            type = FULL_ARTICLE_USER_TYPE,
+                                            username = username
+                                        )
                                     )
                                 )
-                            )
+                            }
                         }
                     }
                 }
