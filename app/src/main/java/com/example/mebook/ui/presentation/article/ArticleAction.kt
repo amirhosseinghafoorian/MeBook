@@ -1,3 +1,5 @@
 package com.example.mebook.ui.presentation.article
 
-sealed interface ArticleAction
+sealed interface ArticleAction {
+    object NavigateUp : ArticleAction
+}

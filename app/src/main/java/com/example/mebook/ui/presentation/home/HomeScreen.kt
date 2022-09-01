@@ -32,6 +32,7 @@ import com.example.mebook.AppConstants.FULL_ARTICLE_FEATURED_TYPE
 import com.example.mebook.AppConstants.FULL_ARTICLE_FEED_TYPE
 import com.example.mebook.R
 import com.example.mebook.model.view.ArticleItemView
+import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.navigation.MeBookScreens.FullArticlesRoute
 import com.example.mebook.ui.components.AnimationStateReactor
 import com.example.mebook.ui.components.ArticleList
@@ -73,10 +74,14 @@ fun HomeScreen(
     HomeScreen(uiState) { action ->
         when (action) {
             is FeedItemClick -> {
-                // todo navigate to article screen
+                navController.navigate(
+                    MeBookScreens.ArticleRoute.generateRoute(action.id)
+                )
             }
             is FeaturedItemClick -> {
-                // todo navigate to article screen
+                navController.navigate(
+                    MeBookScreens.ArticleRoute.generateRoute(action.id)
+                )
             }
             is FeedShowMore -> {
                 navController.navigate(FullArticlesRoute.generateRoute(FULL_ARTICLE_FEED_TYPE))

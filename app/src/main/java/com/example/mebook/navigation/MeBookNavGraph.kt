@@ -46,7 +46,15 @@ fun MeBookNavGraph(
         composable(route = WriteRoute.route) {
             WriteScreen(navController)
         }
-        composable(route = ArticleRoute.route) {
+        composable(
+            route = ArticleRoute.route,
+            arguments = listOf(
+                navArgument("articleId") {
+                    nullable = false
+                    type = NavType.IntType
+                }
+            )
+        ) {
             ArticleScreen(navController)
         }
         composable(
