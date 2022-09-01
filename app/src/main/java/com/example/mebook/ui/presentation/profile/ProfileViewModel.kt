@@ -101,8 +101,16 @@ class ProfileViewModel @Inject constructor(
                     remoteRepository.unFollowUser(uiState.value.username!!)
                 },
                 onSuccess = {
-                    updateState { copy(isFollowingUser = false) }
                     updateFeed()
+                    val followersCount = uiState.value.userProfile!!.second
+                    updateState {
+                        copy(
+                            isFollowingUser = false,
+                            userProfile = uiState.value.userProfile?.copy(
+                                second = followersCount - 1
+                            )
+                        )
+                    }
                 }
             )
         } else {
@@ -111,8 +119,16 @@ class ProfileViewModel @Inject constructor(
                     remoteRepository.followUser(uiState.value.username!!)
                 },
                 onSuccess = {
-                    updateState { copy(isFollowingUser = true) }
                     updateFeed()
+                    val followersCount = uiState.value.userProfile!!.second
+                    updateState {
+                        copy(
+                            isFollowingUser = true,
+                            userProfile = uiState.value.userProfile?.copy(
+                                second = followersCount + 1
+                            )
+                        )
+                    }
                 }
             )
         }
