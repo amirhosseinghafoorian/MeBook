@@ -16,12 +16,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.mebook.R
 import com.example.mebook.navigation.MeBookScreens
+import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
 import com.example.mebook.ui.components.ArrowBackBox
 import com.example.mebook.ui.components.LottieBox
 import com.example.mebook.ui.components.MeBookButton
@@ -41,6 +47,7 @@ import com.example.mebook.ui.presentation.article.ArticleAction.NavigateToUserPr
 import com.example.mebook.ui.presentation.article.ArticleAction.NavigateUp
 import com.example.mebook.ui.util.doOnFalse
 import com.example.mebook.ui.util.doOnTrue
+import kotlinx.coroutines.launch
 
 @Composable
 fun ArticleScreen(
@@ -61,7 +68,11 @@ fun ArticleScreen(
 
     LaunchedEffect(uiState.isDeleted) {
         if (uiState.isDeleted) {
-            navController.navigateUp()
+            navController.navigate(HomeNavRoute.route) {
+                popUpTo(HomeNavRoute.route) {
+                    inclusive = true
+                }
+            }
         }
     }
 
@@ -76,77 +87,101 @@ fun ArticleScreen(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ArticleScreen(
     uiState: ArticleUiState,
     action: (ArticleAction) -> Unit
 ) {
-    MeBookScaffold {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            ArrowBackBox {
-                action(NavigateUp)
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden
+    )
+
+    val scope = rememberCoroutineScope()
+
+    ModalBottomSheetLayout(
+        sheetContent = {
+            DeleteBottomSheet {
+                action(DeleteArticle)
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            uiState.isLoadingArticle.doOnTrue {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LottieBox(
-                        resourceId = R.raw.loading,
-                        modifier = Modifier.size(128.dp),
-                        contentScale = ContentScale.Crop
-                    )
+        },
+        sheetBackgroundColor = MaterialTheme.colors.background,
+        sheetState = modalBottomSheetState,
+        sheetShape = MaterialTheme.shapes.medium.copy(
+            bottomEnd = CornerSize(0.dp),
+            bottomStart = CornerSize(0.dp)
+        )
+    ) {
+        MeBookScaffold {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                ArrowBackBox {
+                    action(NavigateUp)
                 }
-            }.doOnFalse {
-                uiState.article?.let { article ->
-                    AuthorSection(article.authorUsername, article.publishDate) {
-                        action(NavigateToUserProfile(article.authorUsername))
-                    }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    TitleSection(article.title)
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    BodySection(article.body)
-                }
-            }
-
-            uiState.isOwnArticle?.let { isOwn ->
-                isOwn.doOnTrue {
-                    Spacer(modifier = Modifier.height(64.dp))
-
-                    MeBookButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 32.dp),
-                        shape = MaterialTheme.shapes.large,
-                        backgroundColor = MaterialTheme.colors.error,
-                        onClick = {
-                            action(DeleteArticle)
-                        }
+                uiState.isLoadingArticle.doOnTrue {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = "Delete Article",
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.surface
+                        LottieBox(
+                            resourceId = R.raw.loading,
+                            modifier = Modifier.size(128.dp),
+                            contentScale = ContentScale.Crop
                         )
                     }
-                }
-            }
+                }.doOnFalse {
+                    uiState.article?.let { article ->
+                        AuthorSection(article.authorUsername, article.publishDate) {
+                            action(NavigateToUserProfile(article.authorUsername))
+                        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        TitleSection(article.title)
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        BodySection(article.body)
+                    }
+                }
+
+                uiState.isOwnArticle?.let { isOwn ->
+                    isOwn.doOnTrue {
+                        Spacer(modifier = Modifier.height(64.dp))
+
+                        MeBookButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 32.dp),
+                            shape = MaterialTheme.shapes.large,
+                            backgroundColor = MaterialTheme.colors.error,
+                            onClick = {
+                                scope.launch {
+                                    modalBottomSheetState.show()
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = "Delete Article",
+                                style = MaterialTheme.typography.body1,
+                                color = MaterialTheme.colors.surface
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
+
 }
 
 @Composable
@@ -211,4 +246,38 @@ fun BodySection(
         style = MaterialTheme.typography.h6,
         color = MaterialTheme.colors.onBackground
     )
+}
+
+@Composable
+fun DeleteBottomSheet(
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Do you want to delete this article ?",
+            style = MaterialTheme.typography.subtitle1,
+            color = MaterialTheme.colors.onBackground,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MeBookButton(
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.error,
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {
+                onClick()
+            }
+        ) {
+            Text("Confirm")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
 }
