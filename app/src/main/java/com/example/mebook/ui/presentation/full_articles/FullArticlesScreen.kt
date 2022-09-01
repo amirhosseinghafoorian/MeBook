@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.ui.components.ArrowBackBox
 import com.example.mebook.ui.components.ArticleList
 import com.example.mebook.ui.components.MeBookScaffold
 import com.example.mebook.ui.components.ShowMoreItem
+import com.example.mebook.ui.presentation.full_articles.FullArticlesAction.NavigateUp
 import com.example.mebook.ui.presentation.full_articles.FullArticlesAction.OnItemClick
 import com.example.mebook.ui.presentation.full_articles.FullArticlesAction.ShowMore
 
@@ -42,6 +44,7 @@ fun FullArticlesScreen(
             is OnItemClick -> {
                 // todo navigate to article screen
             }
+            is NavigateUp -> navController.navigateUp()
             else -> viewModel.submitAction(action)
         }
     }
@@ -60,6 +63,10 @@ fun FullArticlesScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            ArrowBackBox {
+                action(NavigateUp)
+            }
+
             ArticleList(uiState.articles) { id ->
                 action(OnItemClick(id))
             }

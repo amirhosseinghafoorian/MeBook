@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.mebook.AppConstants.FULL_ARTICLE_USER_TYPE
 import com.example.mebook.R
 import com.example.mebook.navigation.MeBookScreens
 import com.example.mebook.navigation.MeBookScreens.HomeNavRoute
@@ -52,6 +53,7 @@ import com.example.mebook.ui.components.ShowMoreItem
 import com.example.mebook.ui.components.text_field_util.PasswordTextFieldState
 import com.example.mebook.ui.presentation.profile.ProfileAction.ChangePassword
 import com.example.mebook.ui.presentation.profile.ProfileAction.Logout
+import com.example.mebook.ui.presentation.profile.ProfileAction.Navigate
 import com.example.mebook.ui.presentation.profile.ProfileAction.NavigateUp
 import com.example.mebook.ui.presentation.profile.ProfileAction.ToggleFollowState
 import com.example.mebook.ui.util.doOnFalse
@@ -113,6 +115,7 @@ fun ProfileScreen(
     ) { action ->
         when (action) {
             is NavigateUp -> navController.navigateUp()
+            is Navigate -> navController.navigate(action.route)
             else -> viewModel.submitAction(action)
         }
     }
@@ -139,7 +142,7 @@ fun ProfileScreen(
                 }
             } else {
                 ChangePasswordBottomSheet(
-                    isLoading = uiState.isLoading,
+                    isLoading = uiState.isLoadingChangePassword,
                     sheetState = sheetState
                 ) { newPassword ->
                     action(ChangePassword(newPassword))
@@ -166,7 +169,7 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                uiState.username?.let { username ->
+                uiState.isLoadingUserProfile.doOnFalse {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -180,7 +183,7 @@ fun ProfileScreen(
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colors.background)
                                 .padding(16.dp),
-                            text = username,
+                            text = uiState.username ?: "-",
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.h5.copy(
                                 color = MaterialTheme.colors.onBackground,
@@ -190,74 +193,93 @@ fun ProfileScreen(
                             )
                         )
 
-                        Spacer(modifier = Modifier.height(32.dp))
+                        uiState.userProfile?.let { profile ->
+                            Spacer(modifier = Modifier.height(32.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .background(MaterialTheme.colors.background)
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(
-                                    text = "Articles",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h6.copy(
-                                        color = MaterialTheme.colors.onBackground,
-                                        fontWeight = FontWeight.Bold,
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .background(MaterialTheme.colors.background)
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "Articles",
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.h6.copy(
+                                            color = MaterialTheme.colors.onBackground,
+                                            fontWeight = FontWeight.Bold,
+                                        )
                                     )
-                                )
 
-                                Spacer(modifier = Modifier.height(16.dp))
+                                    Spacer(modifier = Modifier.height(16.dp))
 
-                                Text(
-                                    text = "56",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h6,
-                                    color = MaterialTheme.colors.onBackground
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Column(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .background(MaterialTheme.colors.background)
-                                    .padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "Followers",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h6.copy(
-                                        color = MaterialTheme.colors.onBackground,
-                                        fontWeight = FontWeight.Bold,
+                                    Text(
+                                        text = profile.first.toString(),
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.h6,
+                                        color = MaterialTheme.colors.onBackground
                                     )
-                                )
+                                }
 
-                                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.width(16.dp))
 
-                                Text(
-                                    text = "32",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.h6,
-                                    color = MaterialTheme.colors.onBackground
-                                )
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .background(MaterialTheme.colors.background)
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "Followers",
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.h6.copy(
+                                            color = MaterialTheme.colors.onBackground,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    Text(
+                                        text = profile.second.toString(),
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.h6,
+                                        color = MaterialTheme.colors.onBackground
+                                    )
+                                }
                             }
                         }
                     }
+                }.doOnTrue {
+                    LottieBox(
+                        resourceId = R.raw.loading,
+                        modifier = Modifier.size(128.dp),
+                        contentScale = ContentScale.Crop
+                    )
                 }
-                Spacer(modifier = Modifier.height(32.dp))
 
-                // todo visible if articles is not 0
-                ShowMoreItem("Tap to see articles") {
-                    // todo navigate to full articles
+                (uiState.userProfile?.first != 0).doOnTrue {
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    ShowMoreItem("Tap to see articles") {
+                        uiState.username?.let { username ->
+                            action(
+                                Navigate(
+                                    MeBookScreens.FullArticlesRoute.generateRoute(
+                                        type = FULL_ARTICLE_USER_TYPE,
+                                        username = username
+                                    )
+                                )
+                            )
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f))

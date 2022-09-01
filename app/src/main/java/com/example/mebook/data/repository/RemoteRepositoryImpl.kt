@@ -92,6 +92,11 @@ class RemoteRepositoryImpl @Inject constructor(
             }
     }
 
+    override suspend fun getUserProfile(username: String): Pair<Int, Int> {
+        val result = api.userProfile(username).getOrThrow()
+        return Pair(result.articlesCount, result.followersCount)
+    }
+
     override suspend fun isFollowing(username: String): Boolean {
         return api.isFollowing(
             followerUser = dataStoreRepository.getUsername(),

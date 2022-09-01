@@ -9,5 +9,6 @@ object AppConstants {
 
     const val FULL_ARTICLE_FEATURED_TYPE = "featuredType"
     const val FULL_ARTICLE_FEED_TYPE = "feedType"
+    const val FULL_ARTICLE_USER_TYPE = "userType"
 
 }

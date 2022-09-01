@@ -3,6 +3,7 @@ package com.example.mebook.data.remote
 import com.example.mebook.model.remote.BaseResponse
 import com.example.mebook.model.remote.GetFeaturedArticlesResponse
 import com.example.mebook.model.remote.GetUserFeedArticlesResponse
+import com.example.mebook.model.remote.GetUserProfileResponse
 import com.example.mebook.model.remote.SearchUserResponse
 import com.example.mebook.model.remote.ServerTestModel
 import com.example.mebook.model.remote.SignInResponse
@@ -68,5 +69,10 @@ interface MeBookApi {
         @Query("username") username: String,
         @Query("password") password: String,
     ): BaseResponse<Unit>
+
+    @GET("userProfile")
+    suspend fun userProfile(
+        @Query("username") username: String,
+    ): BaseResponse<GetUserProfileResponse>
 
 }

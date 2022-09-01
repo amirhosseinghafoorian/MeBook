@@ -61,6 +61,7 @@ class ProfileViewModel @Inject constructor(
                     setUsername(isOwnProfile = false, username = username)
                     isFollowingUser(username)
                 }
+                getUserProfile(username ?: savedUsername)
             }
         )
     }
@@ -72,6 +73,23 @@ class ProfileViewModel @Inject constructor(
             },
             onSuccess = { result ->
                 updateState { copy(isFollowingUser = result) }
+            }
+        )
+    }
+
+    private fun getUserProfile(username: String) {
+        makeSuspendCall(
+            block = {
+                remoteRepository.getUserProfile(username)
+            },
+            onSuccess = { result ->
+                updateState { copy(userProfile = result) }
+            },
+            onError = { error ->
+                showSnackbar(error.message.toString())
+            },
+            onLoading = { isLoading ->
+                updateState { copy(isLoadingUserProfile = isLoading) }
             }
         )
     }
@@ -124,7 +142,7 @@ class ProfileViewModel @Inject constructor(
                 }
             },
             onLoading = { isLoading ->
-                updateState { copy(isLoading = isLoading) }
+                updateState { copy(isLoadingChangePassword = isLoading) }
             }
         )
     }

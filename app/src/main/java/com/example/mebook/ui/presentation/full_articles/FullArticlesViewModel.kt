@@ -3,6 +3,7 @@ package com.example.mebook.ui.presentation.full_articles
 import androidx.lifecycle.SavedStateHandle
 import com.example.mebook.AppConstants.FULL_ARTICLE_FEATURED_TYPE
 import com.example.mebook.AppConstants.FULL_ARTICLE_FEED_TYPE
+import com.example.mebook.AppConstants.FULL_ARTICLE_USER_TYPE
 import com.example.mebook.domain.RemoteRepository
 import com.example.mebook.ui.presentation.full_articles.FullArticlesAction.ShowMore
 import com.example.mebook.ui.util.BaseViewModel
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FullArticlesViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val remoteRepository: RemoteRepository
 ) : BaseViewModel<FullArticlesAction, FullArticlesUiState>(
     FullArticlesUiState(
@@ -34,6 +35,7 @@ class FullArticlesViewModel @Inject constructor(
         when (uiState.value.type) {
             FULL_ARTICLE_FEATURED_TYPE -> getFeatured()
             FULL_ARTICLE_FEED_TYPE -> getFeed()
+            FULL_ARTICLE_USER_TYPE -> getUserArticles()
         }
     }
 
@@ -64,4 +66,9 @@ class FullArticlesViewModel @Inject constructor(
         updateState { copy(articlesLimit = currentLimit + 10) }
     }
 
+    private fun getUserArticles() {
+        savedStateHandle.get<String>("username")
+        // todo call api
+        //  update ui with result
+    }
 }

@@ -15,9 +15,13 @@ sealed class MeBookScreens(val route: String) {
     object SearchRoute : MeBookScreens("search")
     object WriteRoute : MeBookScreens("write")
     object ArticleRoute : MeBookScreens("article")
-    object FullArticlesRoute : MeBookScreens("fullArticles?type={type}") {
-        fun generateRoute(type: String): String {
-            return "fullArticles?type=$type"
+    object FullArticlesRoute : MeBookScreens("fullArticles?type={type}&username={username}") {
+        fun generateRoute(type: String, username: String? = null): String {
+            var result = "fullArticles?type=$type"
+            username?.let {
+                result += "&username=$username"
+            }
+            return result
         }
     }
 
