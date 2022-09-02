@@ -1,3 +1,5 @@
 package com.example.mebook.ui.presentation.write
 
-class WriteUiState
+data class WriteUiState(
+    val isPublished: Boolean = false
+)
