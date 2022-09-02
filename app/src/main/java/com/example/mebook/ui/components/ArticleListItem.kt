@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.mebook.model.view.ArticleItemView
+import com.example.mebook.ui.util.timestampToDate
 
 @Composable
 fun ArticleListItem(
@@ -52,7 +53,7 @@ fun ArticleListItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = item.publishDate.toString(),
+                text = timestampToDate(item.publishDate),
                 style = MaterialTheme.typography.body1.copy(
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
                 ),

@@ -47,6 +47,7 @@ import com.example.mebook.ui.presentation.article.ArticleAction.NavigateToUserPr
 import com.example.mebook.ui.presentation.article.ArticleAction.NavigateUp
 import com.example.mebook.ui.util.doOnFalse
 import com.example.mebook.ui.util.doOnTrue
+import com.example.mebook.ui.util.timestampToDate
 import kotlinx.coroutines.launch
 
 @Composable
@@ -220,7 +221,7 @@ fun AuthorSection(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(publishDate.toString())
+            Text(timestampToDate(publishDate))
         }
     }
 }
