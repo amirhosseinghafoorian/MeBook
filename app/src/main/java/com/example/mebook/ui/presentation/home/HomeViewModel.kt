@@ -1,6 +1,5 @@
 package com.example.mebook.ui.presentation.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.mebook.AppConstants.shortArticleCount
 import com.example.mebook.domain.LocalRepository
@@ -32,9 +31,7 @@ class HomeViewModel @Inject constructor(
             },
             onSuccess = { flow ->
                 flow.onEach { list ->
-                    if (uiState.value.feed != list) { // todo it does not work
-                        Log.i("baby", list.toString())
-                        Log.i("baby", "-----------")
+                    if (uiState.value.feed != list) {
                         if (list.isNotEmpty() && list.size > shortArticleCount) updateState {
                             copy(feed = list.subList(0, shortArticleCount), canShowMoreFeed = true)
                         }

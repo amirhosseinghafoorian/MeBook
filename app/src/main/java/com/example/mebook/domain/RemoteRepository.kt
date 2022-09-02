@@ -16,6 +16,7 @@ interface RemoteRepository {
     suspend fun getUserArticles(username: String): List<ArticleItemView>
     suspend fun getArticle(articleId: Int): FullArticleView
     suspend fun deleteArticle(articleId: Int)
+    suspend fun publishArticle(title: String, body: String)
 
     suspend fun searchUsers(text: String): List<UserItemView>
 

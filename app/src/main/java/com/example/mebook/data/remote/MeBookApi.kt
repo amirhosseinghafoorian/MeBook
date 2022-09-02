@@ -6,11 +6,14 @@ import com.example.mebook.model.remote.GetSingleArticleResponse
 import com.example.mebook.model.remote.GetUserArticlesResponse
 import com.example.mebook.model.remote.GetUserFeedArticlesResponse
 import com.example.mebook.model.remote.GetUserProfileResponse
+import com.example.mebook.model.remote.PublishArticleRequest
 import com.example.mebook.model.remote.SearchUserResponse
 import com.example.mebook.model.remote.ServerTestModel
 import com.example.mebook.model.remote.SignInResponse
 import com.example.mebook.model.remote.isFollowingResponse
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface MeBookApi {
@@ -90,6 +93,11 @@ interface MeBookApi {
     @GET("deleteArticle")
     suspend fun deleteArticle(
         @Query("articleId") articleId: Int,
+    ): BaseResponse<Unit>
+
+    @POST("publishArticle")
+    suspend fun publishArticle(
+        @Body request: PublishArticleRequest
     ): BaseResponse<Unit>
 
 }

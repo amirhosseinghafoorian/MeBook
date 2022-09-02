@@ -11,6 +11,7 @@ import com.example.mebook.domain.LocalRepository
 import com.example.mebook.domain.RemoteRepository
 import com.example.mebook.model.database.FeaturedEntity
 import com.example.mebook.model.database.FeedEntity
+import com.example.mebook.model.remote.PublishArticleRequest
 import com.example.mebook.model.remote.SignInResponse
 import com.example.mebook.model.view.ArticleItemView
 import com.example.mebook.model.view.FullArticleView
@@ -104,6 +105,16 @@ class RemoteRepositoryImpl @Inject constructor(
 
     override suspend fun deleteArticle(articleId: Int) {
         api.deleteArticle(articleId).getOrThrow()
+    }
+
+    override suspend fun publishArticle(title: String, body: String) {
+        api.publishArticle(
+            PublishArticleRequest(
+                articleBody = body,
+                articleTitle = title,
+                author = dataStoreRepository.getUsername()
+            )
+        )
     }
 
     override suspend fun searchUsers(text: String): List<UserItemView> {
