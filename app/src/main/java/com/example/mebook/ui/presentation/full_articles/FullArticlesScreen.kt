@@ -72,7 +72,7 @@ fun FullArticlesScreen(
                 action(OnItemClick(id))
             }
 
-            if (uiState.articles.isNotEmpty()) {
+            if (uiState.articles.isNotEmpty() && uiState.canShowMore) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ShowMoreItem {

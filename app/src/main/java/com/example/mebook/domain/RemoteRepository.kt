@@ -11,8 +11,8 @@ interface RemoteRepository {
 
     suspend fun updateFeed()
     suspend fun updateFeatured()
-    suspend fun getFeed(limit: Int): List<ArticleItemView>
-    suspend fun getFeatured(limit: Int): List<ArticleItemView>
+    suspend fun getFeed(limit: Int): Pair<List<ArticleItemView>, Boolean>
+    suspend fun getFeatured(limit: Int): Pair<List<ArticleItemView>, Boolean>
     suspend fun getUserArticles(username: String): List<ArticleItemView>
     suspend fun getArticle(articleId: Int): FullArticleView
     suspend fun deleteArticle(articleId: Int)

@@ -68,7 +68,7 @@ android {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BASE_URL", "\"http://45.139.10.139/\"")
+            buildConfigField("String", "BASE_URL", "\"http://45.139.10.139:5000/\"")
         }
     }
     compileOptions {
@@ -110,6 +110,7 @@ dependencies {
     // JUnit 5
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.2"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.3.2"
+    testImplementation("org.amshove.kluent:kluent:1.68")
 
     // coroutine for testing
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'

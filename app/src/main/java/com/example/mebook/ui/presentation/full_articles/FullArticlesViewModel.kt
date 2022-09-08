@@ -43,8 +43,8 @@ class FullArticlesViewModel @Inject constructor(
         makeSuspendCall(
             block = {
                 remoteRepository.getFeatured(uiState.value.articlesLimit)
-            }, onSuccess = { list ->
-                updateState { copy(articles = list) }
+            }, onSuccess = { result ->
+                updateState { copy(articles = result.first, canShowMore = result.second) }
                 updateLimit()
             }
         )
@@ -54,8 +54,8 @@ class FullArticlesViewModel @Inject constructor(
         makeSuspendCall(
             block = {
                 remoteRepository.getFeed(uiState.value.articlesLimit)
-            }, onSuccess = { list ->
-                updateState { copy(articles = list) }
+            }, onSuccess = { result ->
+                updateState { copy(articles = result.first, canShowMore = result.second) }
                 updateLimit()
             }
         )
@@ -66,8 +66,6 @@ class FullArticlesViewModel @Inject constructor(
         updateState { copy(articlesLimit = currentLimit + 10) }
     }
 
-    // todo articles limit should be added
-    //  or remove show more for user articles
     private fun getUserArticles() {
         savedStateHandle.get<String>("username")?.let { username ->
             makeSuspendCall(

@@ -65,24 +65,33 @@ class RemoteRepositoryImpl @Inject constructor(
         localRepository.addFeatured(featuredList)
     }
 
-    override suspend fun getFeed(limit: Int): List<ArticleItemView> {
-        return api
+    override suspend fun getFeed(limit: Int): Pair<List<ArticleItemView>, Boolean> {
+        val result = api
             .getUserFeedArticles(dataStoreRepository.getUsername(), limit)
             .getOrThrow()
-            .feedArticles
-            .map { response ->
-                response.toArticleItemView()
-            }
+
+        return Pair(
+            result.feedArticles
+                .map { response ->
+                    response.toArticleItemView()
+                },
+            result.canShowMore
+        )
     }
 
-    override suspend fun getFeatured(limit: Int): List<ArticleItemView> {
-        return api
+    override suspend fun getFeatured(limit: Int): Pair<List<ArticleItemView>, Boolean> {
+        val result = api
             .getFeaturedArticles(dataStoreRepository.getUsername(), limit)
             .getOrThrow()
-            .featuredArticles
-            .map { response ->
-                response.toArticleItemView()
-            }
+
+        return Pair(
+            result
+                .featuredArticles
+                .map { response ->
+                    response.toArticleItemView()
+                },
+            result.canShowMore
+        )
     }
 
     override suspend fun getUserArticles(username: String): List<ArticleItemView> {
