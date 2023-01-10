@@ -14,3 +14,8 @@ fun timestampToDate(time: Long): String {
 
     return SimpleDateFormat("MM/dd/yyyy").format(date)
 }
+
+inline fun <T> Iterable<T>.firstONull(predicate: (T) -> Boolean): T? {
+    for (element in this) if (predicate(element)) return element
+    return null
+}
